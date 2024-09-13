@@ -76,8 +76,30 @@ st.markdown(navbar_html, unsafe_allow_html=True)
 a,b = st.columns([0.3,0.7])
 
 mapping = {
-        "Escherichia coli": "resource/all_orgs/Ecoli data/Final_Ecoli.csv"
+        "Escherichia coli": ["./Final_Ecoli1.csv","./Final_Ecoli2.csv"],
+        "Enterobacter cloacae": "./Final_EB.csv",
+        "Enterococcus faecium": "./Final_EF.csv",
+        "Klebsiella pneumoniae": "./Final_KP.csv",
+        "Acinetobacter baumannii": "./Final_AB.csv",
+        "Staphylococcus aureus": ["./Final_SA1.csv","./Final_SA2.csv"]
     }
+
+def getdf(organism):
+    if type(mapping[organism])==type([1,2]):
+        import pandas as pd
+        def combine_csv(file1, file2):
+            # Load the two CSV files
+            df1 = pd.read_csv(file1)
+            df2 = pd.read_csv(file2)
+            
+            # Concatenate the two dataframes to get the original dataframe
+            combined_df = pd.concat([df1, df2], ignore_index=True)
+            
+            return combined_df
+
+        # Usage
+        original_df = combine_csv(mapping[organism][0], mapping[organism][1])
+        return original_df
 
 def plot1(rtor_df):
     arows = rtor_df["antecedents_list"]
@@ -274,7 +296,7 @@ def set_whole(org, b):
     import numpy as np
 
     
-    SA = pd.read_csv(mapping[org], low_memory=False)
+    SA = getdf(org)
     print(SA.head())
     lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1)
     minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1)
@@ -345,7 +367,7 @@ def set_country(org, b):
     import numpy as np
 
     # Load the data
-    SA = pd.read_csv(mapping[org], low_memory=False)
+    SA = getdf(org)
     print(SA.head())
     
     # Get user inputs
@@ -423,7 +445,7 @@ def set_age(org, b):
     from mlxtend.frequent_patterns import apriori, association_rules
 
     # Load the data
-    SA = pd.read_csv(mapping[org], low_memory=False)
+    SA = getdf(org)
     print(SA.head())
     
     # Define filtering sliders
@@ -526,7 +548,7 @@ def set_year(org, b):
     from mlxtend.frequent_patterns import apriori, association_rules
 
     # Load the data
-    SA = pd.read_csv(mapping[org], low_memory=False)
+    SA = getdf(org)
     print(SA.head())
 
     # Define filtering sliders
