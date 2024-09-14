@@ -182,6 +182,7 @@ mapping = {
         "Escherichia coli": ["./Final_Ecoli1.csv","./Final_Ecoli2.csv"],
         "Enterobacter cloacae": "./Final_EB.csv",
         "Enterococcus faecium": "./Final_EF.csv",
+        "Pseudomonas aeruginosa": "./Final_PA.csv",
         "Klebsiella pneumoniae": "./Final_KP.csv",
         "Acinetobacter baumannii": "./Final_AB.csv",
         "Staphylococcus aureus": ["./Final_SA1.csv","./Final_SA2.csv"]
@@ -415,132 +416,137 @@ def set_whole(org, b):
     
     lift = st.slider("Choose Lift value (default @ 2.0)", min_value=0.0, max_value=2.0, step=0.1, value=2.0)
     minsup = st.slider("Choose Minimum Support value (default @ 0.1)", min_value=0.0, max_value=1.0, step=0.1, value=0.1)
-    maxlen = st.slider("Choose Maximum Length of Rules (default @ 3)", min_value=1, max_value=3, step=1,value=3)
+    maxlen = 3
 
-
-    if st.button("Apply Filters"):
-        df_SA = SA[SA.columns[SA.isnull().sum() / SA.shape[0] < 0.8]]
-        df_SA_I_cols = list(df_SA.columns[df_SA.columns.str.contains("_I")])
-        SA_input = df_SA[df_SA_I_cols]
-        SA_input_getdum = pd.get_dummies(SA_input)
-        SA_input_getdum = SA_input_getdum.astype(bool)
-        SA_df_freq = apriori(SA_input_getdum, min_support=minsup, max_len=maxlen, use_colnames=True, low_memory=True)
-        SA_rules = association_rules(SA_df_freq)
-        SA_rules['antecedents_list'] = SA_rules['antecedents'].apply(lambda x: list(x))
-        SA_rules['consequents_list'] = SA_rules['consequents'].apply(lambda x: list(x))
-        SA_rules.to_csv("SA_whole_rules.csv", index=False)
-
-    with b:
-        z,x = st.columns(2)
-        # with st.expander("All rules"):
-        #     st.write(SA_rules)
-        # with st.expander("Rules with Lift > 2"):
-        #     
-        #     st.write(lift_filtered)
-        #     st.write(lift_filtered.shape)
-        lift_filtered = SA_rules[SA_rules['lift'] > lift]
-        def antecedents_only_R(antecedents_list):
-            # Check if all elements in antecedents list end with '_R'
-            return all(item.endswith('_R') for item in antecedents_list)
-
-        lift_filtered = lift_filtered[lift_filtered['antecedents_list'].apply(antecedents_only_R)]
-
-        # Step 3: Split the rules into "rtor" and "rtos"
-        rtor_rows = []
-        rtos_rows = []
-
-        def process_consequents(consequents_list):
-            if all(item.endswith('_R') for item in consequents_list):
-                return 'rtor'
-            else:
-                return 'rtos'
-
-        # Iterate over the filtered dataframe and split into rtor and rtos
-        for index, row in lift_filtered.iterrows():
-            rule_type = process_consequents(row['consequents_list'])
-            if rule_type == 'rtor':
-                rtor_rows.append(row)
-            else:
-                rtos_rows.append(row)
-
-        # Create new DataFrames rtor and rtos
-        rtor_df = pd.DataFrame(rtor_rows)
-        rtos_df = pd.DataFrame(rtos_rows)
+    try:
+        if st.button("Apply Filters"):
+            df_SA = SA[SA.columns[SA.isnull().sum() / SA.shape[0] < 0.8]]
+            df_SA_I_cols = list(df_SA.columns[df_SA.columns.str.contains("_I")])
+            SA_input = df_SA[df_SA_I_cols]
+            SA_input_getdum = pd.get_dummies(SA_input)
+            SA_input_getdum = SA_input_getdum.astype(bool)
+            SA_df_freq = apriori(SA_input_getdum, min_support=minsup, max_len=maxlen, use_colnames=True, low_memory=True)
+            SA_rules = association_rules(SA_df_freq)
+            SA_rules['antecedents_list'] = SA_rules['antecedents'].apply(lambda x: list(x))
+            SA_rules['consequents_list'] = SA_rules['consequents'].apply(lambda x: list(x))
+            SA_rules.to_csv("SA_whole_rules.csv", index=False)
     
-        st.subheader("Association Rules Query Panel")
-        st.write("---")
-        j,k = st.columns(2)
-
-        if ab!="":
-            rdf = rtor_df.copy()
-            rdfla = list(rdf["antecedents_list"])
-            rdflc = list(rdf["consequents_list"])
-            rdflan = []
-            rdflac = []
-            for i in range(len(rdfla)):
-                if len(rdfla[i])<2:
-                    rdflan.append(rdfla[i])
-                    rdflac.append(rdflc[i])
-
-            map_rda = []
-            for i in range(len(rdflan)):
-                if rdflan[i][0]==(ab+"_I_R"):
-                    map_rda.append(rdflac[i])
-            
-            tos = []
-            for i in map_rda:
-                cons = ",".join(i)
-                tos.append(cons.replace("_I_R",""))
-            with j:
-                st.subheader("Network Graph for R to R")
-                if len(tos)!=0:
-                    plot_network_graph(ab,tos)
-                    with st.expander("Description"):
-                        for i in tos:
-                            st.write(f"> If Antibiotic {ab} is Resistant, then {i} are also resistant")
+        with b:
+            z,x = st.columns(2)
+            # with st.expander("All rules"):
+            #     st.write(SA_rules)
+            # with st.expander("Rules with Lift > 2"):
+            #     
+            #     st.write(lift_filtered)
+            #     st.write(lift_filtered.shape)
+            lift_filtered = SA_rules[SA_rules['lift'] > lift]
+            def antecedents_only_R(antecedents_list):
+                # Check if all elements in antecedents list end with '_R'
+                return all(item.endswith('_R') for item in antecedents_list)
+    
+            lift_filtered = lift_filtered[lift_filtered['antecedents_list'].apply(antecedents_only_R)]
+    
+            # Step 3: Split the rules into "rtor" and "rtos"
+            rtor_rows = []
+            rtos_rows = []
+    
+            def process_consequents(consequents_list):
+                if all(item.endswith('_R') for item in consequents_list):
+                    return 'rtor'
                 else:
-                    st.warning("No rules found. Try with new parameters!")
+                    return 'rtos'
+    
+            # Iterate over the filtered dataframe and split into rtor and rtos
+            for index, row in lift_filtered.iterrows():
+                rule_type = process_consequents(row['consequents_list'])
+                if rule_type == 'rtor':
+                    rtor_rows.append(row)
+                else:
+                    rtos_rows.append(row)
+    
+            # Create new DataFrames rtor and rtos
+            rtor_df = pd.DataFrame(rtor_rows)
+            rtos_df = pd.DataFrame(rtos_rows)
         
-        if ab!="":
-            rdf = rtos_df.copy()
-            rdfla = list(rdf["antecedents_list"])
-            rdflc = list(rdf["consequents_list"])
-            rdflan = []
-            rdflac = []
-            for i in range(len(rdfla)):
-                if len(rdfla[i])<2:
-                    rdflan.append(rdfla[i])
-                    rdflac.append(rdflc[i])
-
-            map_rda = []
-            for i in range(len(rdflan)):
-                if rdflan[i][0]==(ab+"_I_R"):
-                    map_rda.append(rdflac[i])
-            
-            tos = []
-            for i in map_rda:
-                s = i
-                ns = []
-                for j in s:
-                    if "_I_R" in j:
-                        pass
-                    else:
-                        ns.append(j)
-                if len(ns)>1:
-                    cons = ",".join(ns)
-                else:
-                    cons = ns[0]
+            st.subheader("Association Rules Query Panel")
+            st.write("---")
+            j,k = st.columns(2)
+    
+            if ab!="":
+                rdf = rtor_df.copy()
+                rdfla = list(rdf["antecedents_list"])
+                rdflc = list(rdf["consequents_list"])
+                rdflan = []
+                rdflac = []
+                for i in range(len(rdfla)):
+                    if len(rdfla[i])<2:
+                        rdflan.append(rdfla[i])
+                        rdflac.append(rdflc[i])
+    
+                map_rda = []
+                for i in range(len(rdflan)):
+                    if rdflan[i][0]==(ab+"_I_R"):
+                        map_rda.append(rdflac[i])
                 
-                tos.append(cons.replace("_I_S",""))
-            with k:
-                st.subheader("Network Graph for R to S")
-                if len(tos)!=0:
-                    plot_network_graph(ab,tos)
-                    with st.expander("Description"):
-                        for i in tos:
-                            st.write(f"> If Antibiotic {ab} is Resistant, then {i} are Susceptible")
-                else:
-                    st.warning("No rules found. Try with new parameters!")
+                tos = []
+                for i in map_rda:
+                    cons = ",".join(i)
+                    tos.append(cons.replace("_I_R",""))
+                with j:
+                    st.subheader("Network Graph for R to R")
+                    if len(tos)!=0:
+                        plot_network_graph(ab,tos)
+                        with st.expander("Description"):
+                            for i in tos:
+                                st.write(f"> If Antibiotic {ab} is Resistant, then {i} are also resistant")
+                    else:
+                        st.warning("No rules found. Try with new parameters!")
+            
+            if ab!="":
+                rdf = rtos_df.copy()
+                rdfla = list(rdf["antecedents_list"])
+                rdflc = list(rdf["consequents_list"])
+                rdflan = []
+                rdflac = []
+                for i in range(len(rdfla)):
+                    if len(rdfla[i])<2:
+                        rdflan.append(rdfla[i])
+                        rdflac.append(rdflc[i])
+    
+                map_rda = []
+                for i in range(len(rdflan)):
+                    if rdflan[i][0]==(ab+"_I_R"):
+                        map_rda.append(rdflac[i])
+                
+                tos = []
+                for i in map_rda:
+                    s = i
+                    ns = []
+                    for j in s:
+                        if "_I_R" in j:
+                            pass
+                        else:
+                            ns.append(j)
+                    if len(ns)>1:
+                        cons = ",".join(ns)
+                    else:
+                        cons = ns[0]
+                    
+                    tos.append(cons.replace("_I_S",""))
+                with k:
+                    st.subheader("Network Graph for R to S")
+                    if len(tos)!=0:
+                        plot_network_graph(ab,tos)
+                        with st.expander("Description"):
+                            for i in tos:
+                                st.write(f"> If Antibiotic {ab} is Resistant, then {i} are Susceptible")
+                    else:
+                        st.warning("No rules found. Try with new parameters!")
+    except:
+        with b:
+            st.subheader("Association Rules Query Panel")
+            st.write("---")
+            st.error("No Rules generated for this parameter configuration.")
         # with q:
         #     st.subheader("Network Plot for R to R")
         #     #plot1(map_rda)
@@ -566,131 +572,136 @@ def set_country(org, b):
     selected_country = st.selectbox("Select Country", options=SA['Country'].unique())
     lift = st.slider("Choose Lift value (default @ 2.0)", min_value=0.0, max_value=2.0, step=0.1, value=2.0)
     minsup = st.slider("Choose Minimum Support value (default @ 0.1)", min_value=0.0, max_value=1.0, step=0.1, value=0.1)
-    maxlen = st.slider("Choose Maximum Length of Rules (default @ 3)", min_value=1, max_value=3, step=1,value=3)
+    maxlen = 3
     
-
-    if st.button("Apply Filters"):
-        # Filter by the selected country
-        df_SA = SA[SA.columns[SA.isnull().sum() / SA.shape[0] < 0.8]]
-        df_filtered_country_SA = df_SA[df_SA['Country'] == selected_country]
-        df_SA_I_cols = list(df_filtered_country_SA.columns[df_SA.columns.str.contains("_I")])
-        df_filtered_country_SA = df_filtered_country_SA[df_SA_I_cols]
+    try:
+        if st.button("Apply Filters"):
+            # Filter by the selected country
+            df_SA = SA[SA.columns[SA.isnull().sum() / SA.shape[0] < 0.8]]
+            df_filtered_country_SA = df_SA[df_SA['Country'] == selected_country]
+            df_SA_I_cols = list(df_filtered_country_SA.columns[df_SA.columns.str.contains("_I")])
+            df_filtered_country_SA = df_filtered_country_SA[df_SA_I_cols]
+            
+            # Generate frequent itemsets and association rules
+            df_filtered_country_SA = pd.get_dummies(df_filtered_country_SA)
+            df_filtered_country_SA = df_filtered_country_SA.astype(bool)
+            df_freq = apriori(df_filtered_country_SA, min_support=minsup, max_len=maxlen, use_colnames=True, low_memory=True)
+            df_rules = association_rules(df_freq)
+            df_rules['antecedents_list'] = df_rules['antecedents'].apply(lambda x: list(x))
+            df_rules['consequents_list'] = df_rules['consequents'].apply(lambda x: list(x))
+            df_rules.to_csv(f"SA_{selected_country}_rules.csv", index=False)
         
-        # Generate frequent itemsets and association rules
-        df_filtered_country_SA = pd.get_dummies(df_filtered_country_SA)
-        df_filtered_country_SA = df_filtered_country_SA.astype(bool)
-        df_freq = apriori(df_filtered_country_SA, min_support=minsup, max_len=maxlen, use_colnames=True, low_memory=True)
-        df_rules = association_rules(df_freq)
-        df_rules['antecedents_list'] = df_rules['antecedents'].apply(lambda x: list(x))
-        df_rules['consequents_list'] = df_rules['consequents'].apply(lambda x: list(x))
-        df_rules.to_csv(f"SA_{selected_country}_rules.csv", index=False)
+        with b:
+            z, x = st.columns(2)
+            lift_filtered = df_rules[df_rules['lift'] > lift]
+            
+            def antecedents_only_R(antecedents_list):
+                # Check if all elements in antecedents list end with '_R'
+                return all(item.endswith('_R') for item in antecedents_list)
     
-    with b:
-        z, x = st.columns(2)
-        lift_filtered = df_rules[df_rules['lift'] > lift]
-        
-        def antecedents_only_R(antecedents_list):
-            # Check if all elements in antecedents list end with '_R'
-            return all(item.endswith('_R') for item in antecedents_list)
-
-        lift_filtered = lift_filtered[lift_filtered['antecedents_list'].apply(antecedents_only_R)]
-
-        # Split the rules into "rtor" and "rtos"
-        rtor_rows = []
-        rtos_rows = []
-
-        def process_consequents(consequents_list):
-            if all(item.endswith('_R') for item in consequents_list):
-                return 'rtor'
-            else:
-                return 'rtos'
-
-        # Iterate over the filtered dataframe and split into rtor and rtos
-        for index, row in lift_filtered.iterrows():
-            rule_type = process_consequents(row['consequents_list'])
-            if rule_type == 'rtor':
-                rtor_rows.append(row)
-            else:
-                rtos_rows.append(row)
-
-        # Create new DataFrames rtor and rtos
-        rtor_df = pd.DataFrame(rtor_rows)
-        rtos_df = pd.DataFrame(rtos_rows)
-        
-        st.subheader("Association Rules Query Panel")
-        st.write("---")
-        j,k = st.columns(2)
-
-        if ab!="":
-            rdf = rtor_df.copy()
-            rdfla = list(rdf["antecedents_list"])
-            rdflc = list(rdf["consequents_list"])
-            rdflan = []
-            rdflac = []
-            for i in range(len(rdfla)):
-                if len(rdfla[i])<2:
-                    rdflan.append(rdfla[i])
-                    rdflac.append(rdflc[i])
-
-            map_rda = []
-            for i in range(len(rdflan)):
-                if rdflan[i][0]==(ab+"_I_R"):
-                    map_rda.append(rdflac[i])
-            
-            tos = []
-            for i in map_rda:
-                cons = ",".join(i)
-                tos.append(cons.replace("_I_R",""))
-            with j:
-                st.subheader("Network Graph for R to R")
-                if len(tos)!=0:
-                    plot_network_graph(ab,tos)
-                    with st.expander("Description"):
-                        for i in tos:
-                            st.write(f"> If Antibiotic {ab} is Resistant, then {i} are also resistant")
+            lift_filtered = lift_filtered[lift_filtered['antecedents_list'].apply(antecedents_only_R)]
+    
+            # Split the rules into "rtor" and "rtos"
+            rtor_rows = []
+            rtos_rows = []
+    
+            def process_consequents(consequents_list):
+                if all(item.endswith('_R') for item in consequents_list):
+                    return 'rtor'
                 else:
-                    st.warning("No rules found. Try with new parameters!")
-        
-        if ab!="":
-            rdf = rtos_df.copy()
-            rdfla = list(rdf["antecedents_list"])
-            rdflc = list(rdf["consequents_list"])
-            rdflan = []
-            rdflac = []
-            for i in range(len(rdfla)):
-                if len(rdfla[i])<2:
-                    rdflan.append(rdfla[i])
-                    rdflac.append(rdflc[i])
-
-            map_rda = []
-            for i in range(len(rdflan)):
-                if rdflan[i][0]==(ab+"_I_R"):
-                    map_rda.append(rdflac[i])
-            
-            tos = []
-            for i in map_rda:
-                s = i
-                ns = []
-                for j in s:
-                    if "_I_R" in j:
-                        pass
-                    else:
-                        ns.append(j)
-                if len(ns)>1:
-                    cons = ",".join(ns)
+                    return 'rtos'
+    
+            # Iterate over the filtered dataframe and split into rtor and rtos
+            for index, row in lift_filtered.iterrows():
+                rule_type = process_consequents(row['consequents_list'])
+                if rule_type == 'rtor':
+                    rtor_rows.append(row)
                 else:
-                    cons = ns[0]
+                    rtos_rows.append(row)
+    
+            # Create new DataFrames rtor and rtos
+            rtor_df = pd.DataFrame(rtor_rows)
+            rtos_df = pd.DataFrame(rtos_rows)
+            
+            st.subheader("Association Rules Query Panel")
+            st.write("---")
+            j,k = st.columns(2)
+    
+            if ab!="":
+                rdf = rtor_df.copy()
+                rdfla = list(rdf["antecedents_list"])
+                rdflc = list(rdf["consequents_list"])
+                rdflan = []
+                rdflac = []
+                for i in range(len(rdfla)):
+                    if len(rdfla[i])<2:
+                        rdflan.append(rdfla[i])
+                        rdflac.append(rdflc[i])
+    
+                map_rda = []
+                for i in range(len(rdflan)):
+                    if rdflan[i][0]==(ab+"_I_R"):
+                        map_rda.append(rdflac[i])
                 
-                tos.append(cons.replace("_I_S",""))
-            with k:
-                st.subheader("Network Graph for R to S")
-                if len(tos)!=0:
-                    plot_network_graph(ab,tos)
-                    with st.expander("Description"):
-                        for i in tos:
-                            st.write(f"> If Antibiotic {ab} is Resistant, then {i} are also Susceptible")
-                else:
-                    st.warning("No rules found. Try with new parameters!")
+                tos = []
+                for i in map_rda:
+                    cons = ",".join(i)
+                    tos.append(cons.replace("_I_R",""))
+                with j:
+                    st.subheader("Network Graph for R to R")
+                    if len(tos)!=0:
+                        plot_network_graph(ab,tos)
+                        with st.expander("Description"):
+                            for i in tos:
+                                st.write(f"> If Antibiotic {ab} is Resistant, then {i} are also resistant")
+                    else:
+                        st.warning("No rules found. Try with new parameters!")
+            
+            if ab!="":
+                rdf = rtos_df.copy()
+                rdfla = list(rdf["antecedents_list"])
+                rdflc = list(rdf["consequents_list"])
+                rdflan = []
+                rdflac = []
+                for i in range(len(rdfla)):
+                    if len(rdfla[i])<2:
+                        rdflan.append(rdfla[i])
+                        rdflac.append(rdflc[i])
+    
+                map_rda = []
+                for i in range(len(rdflan)):
+                    if rdflan[i][0]==(ab+"_I_R"):
+                        map_rda.append(rdflac[i])
+                
+                tos = []
+                for i in map_rda:
+                    s = i
+                    ns = []
+                    for j in s:
+                        if "_I_R" in j:
+                            pass
+                        else:
+                            ns.append(j)
+                    if len(ns)>1:
+                        cons = ",".join(ns)
+                    else:
+                        cons = ns[0]
+                    
+                    tos.append(cons.replace("_I_S",""))
+                with k:
+                    st.subheader("Network Graph for R to S")
+                    if len(tos)!=0:
+                        plot_network_graph(ab,tos)
+                        with st.expander("Description"):
+                            for i in tos:
+                                st.write(f"> If Antibiotic {ab} is Resistant, then {i} are also Susceptible")
+                    else:
+                        st.warning("No rules found. Try with new parameters!")
+    except:
+         with b:
+            st.subheader("Association Rules Query Panel")
+            st.write("---")
+            st.error("No Rules generated for this parameter configuration.")
 
 def set_age(org, b):
     import pandas as pd
