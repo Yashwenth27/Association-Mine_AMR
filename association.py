@@ -159,7 +159,10 @@ def plot1(rtor_df):
                 thickness=15,
                 title='Node Connections',
                 xanchor='left',
-                titleside='right'
+                titleside='right',
+                tickmode='array',
+                tickvals=[],  # We will dynamically calculate tick values
+                ticktext=[]  # Will be filled with whole numbers
             ),
             line_width=4
         ),
@@ -172,16 +175,22 @@ def plot1(rtor_df):
     )
 
     # Add nodes to the plot with hover text indicating the source (antecedent or consequent)
+    node_connections = []
     for node in G.nodes():
         x, y = pos[node]
         node_trace['x'] += tuple([x])
         node_trace['y'] += tuple([y])
-        if any(node in a for a in arows):
-            source = 'Antecedents'
-        else:
-            source = 'Consequents'
+        node_connections.append(len(list(G.neighbors(node))))  # Count connections for color scale
         node_trace['text'] += tuple([f'{node[0:len(node)-4]}'])
-        node_trace['marker']['color'] += tuple([len(list(G.neighbors(node)))])
+
+    # Set node colors based on connections
+    node_trace['marker']['color'] = node_connections
+
+    # Calculate the tick values for the colorbar dynamically
+    max_connections = max(node_connections) if node_connections else 0
+    tickvals = list(range(0, max_connections + 1))  # Whole numbers from 0 to max connections
+    node_trace['marker']['colorbar']['tickvals'] = tickvals
+    node_trace['marker']['colorbar']['ticktext'] = [str(val) for val in tickvals]
 
     # Create the figure
     fig = go.Figure(data=[edge_trace, node_trace],
@@ -194,12 +203,13 @@ def plot1(rtor_df):
                         annotations=[dict(
                             showarrow=False,
                             xref="paper", yref="paper")],
-                        xaxis=dict(showgrid=False, zeroline=False,visible=False),
-                        yaxis=dict(showgrid=False, zeroline=False,visible=False))
+                        xaxis=dict(showgrid=False, zeroline=False, visible=False),
+                        yaxis=dict(showgrid=False, zeroline=False, visible=False))
                     )
 
     # Display the graph in Streamlit
     st.plotly_chart(fig)
+
 
 def plot2(rtos_df):
     arows = rtos_df["antecedents_list"]
