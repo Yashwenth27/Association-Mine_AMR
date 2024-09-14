@@ -486,8 +486,8 @@ def set_age(org, b):
     print(SA.head())
     
     # Define filtering sliders
-    lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1)
-    minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1)
+    lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1,value=2.0)
+    minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1,value=0.1)
     maxlen = 3
     
     age_group = st.selectbox("Select Age Group", options=SA['Age Group'].unique())
@@ -646,7 +646,7 @@ def set_year(org, b):
         df_rules['consequents_list'] = df_rules['consequents'].apply(lambda x: list(x))
         df_rules.to_csv(f"SA_freq_Asso_year/{year}/SA_asso_rules.csv", index=False)
         #copy to all set_*
-        st.write(f"Total Rules Generated {SA_rules.shape[0]}")
+        st.write(f"Total Rules Generated {df_rules.shape[0]}")
         with open("SA_whole_rules.csv", "rb") as file:
             st.download_button(
                 label="Download all rules",
