@@ -637,10 +637,13 @@ def set_country(org, b):
                 tos.append(cons.replace("_I_R",""))
             with j:
                 st.subheader("Network Graph for R to R")
-                plot_network_graph(ab,tos)
-                with st.expander("Description"):
-                    for i in tos:
-                        st.write(f"> If Antibiotic {ab} is Resistant, then {i} are also resistant")
+                if len(tos)==0:
+                    plot_network_graph(ab,tos)
+                    with st.expander("Description"):
+                        for i in tos:
+                            st.write(f"> If Antibiotic {ab} is Resistant, then {i} are also resistant")
+                else:
+                    st.warning("No rules found. Try with new parameters!")
         
         if ab!="":
             rdf = rtos_df.copy()
@@ -675,10 +678,13 @@ def set_country(org, b):
                 tos.append(cons.replace("_I_S",""))
             with k:
                 st.subheader("Network Graph for R to S")
-                plot_network_graph(ab,tos)
-                with st.expander("Description"):
-                    for i in tos:
-                        st.write(f"> If Antibiotic {ab} is Resistant, then {i} are Susceptible")
+                if len(tos)==0:
+                    plot_network_graph(ab,tos)
+                    with st.expander("Description"):
+                        for i in tos:
+                            st.write(f"> If Antibiotic {ab} is Resistant, then {i} are also Susceptible")
+                else:
+                    st.warning("No rules found. Try with new parameters!")
 
 def set_age(org, b):
     import pandas as pd
