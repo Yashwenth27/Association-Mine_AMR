@@ -383,7 +383,7 @@ def set_whole(org, b):
         with w:
             st.subheader("Network Plot for R to S")
             #copy to all set_*
-            st.caption(f"Total Rules Extracted - {rtor_df.shape[0]}")
+            st.caption(f"Total Rules Extracted - {rtos_df.shape[0]}")
             plot2(rtos_df)
 
 def set_country(org, b):
