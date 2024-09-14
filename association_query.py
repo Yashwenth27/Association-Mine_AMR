@@ -636,6 +636,7 @@ def set_country(org, b):
                 cons = ",".join(i)
                 tos.append(cons.replace("_I_R",""))
             with j:
+                st.subheader("Network Graph for R to R")
                 plot_network_graph(ab,tos)
                 with st.expander("Description"):
                     for i in tos:
@@ -673,6 +674,7 @@ def set_country(org, b):
                 
                 tos.append(cons.replace("_I_S",""))
             with k:
+                st.subheader("Network Graph for R to S")
                 plot_network_graph(ab,tos)
                 with st.expander("Description"):
                     for i in tos:
