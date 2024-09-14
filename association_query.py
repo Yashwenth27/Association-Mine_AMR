@@ -547,6 +547,7 @@ def set_whole(org, b):
             st.subheader("Association Rules Query Panel")
             st.write("---")
             st.error("No Rules generated for this parameter configuration.")
+            st.warning("Try with new parameters!")
         # with q:
         #     st.subheader("Network Plot for R to R")
         #     #plot1(map_rda)
@@ -702,6 +703,7 @@ def set_country(org, b):
             st.subheader("Association Rules Query Panel")
             st.write("---")
             st.error("No Rules generated for this parameter configuration.")
+             st.warning("Try with new parameters!")
 
 def set_age(org, b):
     import pandas as pd
@@ -719,91 +721,99 @@ def set_age(org, b):
     maxlen = st.slider("Choose Maximum Length of Rules", min_value=1, max_value=3, step=1)
     
     age_group = st.selectbox("Select Age Group", options=SA['Age Group'].unique())
+
+    try:
+        if st.button("Apply Filters"):
+            # Filter data by selected age group
+            df_SA = SA[SA['Age Group'] == age_group]
+            
+            # Prepare the data for association rule mining
+            df_SA_I_cols = list(df_SA.columns[df_SA.columns.str.contains("_I")])
+            df_SA_I_cols.append('Age Group')
+            SA_input_age = df_SA[df_SA_I_cols]
+            
+            # Create a directory for the filtered data if it doesn't exist
+            if not os.path.exists('SA_Age_Split/'):
+                os.mkdir("SA_Age_Split")
+                
+            # Save filtered data for the selected age group
+            SA_input_age.to_csv(f"SA_Age_Split/SA_{age_group}.csv", index=False)
+            
+            # Process the data
+            dfi = pd.read_csv(f"SA_Age_Split/SA_{age_group}.csv", low_memory=False)
+            dfi.drop(['Age Group'], axis=1, inplace=True)
+            dfi_c = dfi[dfi.columns[dfi.isnull().sum() / dfi.shape[0] < 0.8]]
+            dfi_gd = pd.get_dummies(dfi_c, dtype='bool')
+            df_freq = apriori(dfi_gd, min_support=minsup, max_len=maxlen, use_colnames=True, low_memory=True)
+            
+            # Create a directory for frequency and association rules if it doesn't exist
+            if not os.path.exists('SA_freq_Asso_age/'):
+                os.mkdir("SA_freq_Asso_age/")
+            if os.path.exists(f"SA_freq_Asso_age/{age_group}"):
+                import shutil
+                shutil.rmtree(f"SA_freq_Asso_age/{age_group}")
+            os.mkdir(f"SA_freq_Asso_age/{age_group}")
+            
+            # Save frequency items
+            df_freq.to_csv(f"SA_freq_Asso_age/{age_group}/SA_freq_items.csv", index=False)
+            
+            # Generate and save association rules
+            df_rules = association_rules(df_freq)
+            df_rules['antecedents_list'] = df_rules['antecedents'].apply(lambda x: list(x))
+            df_rules['consequents_list'] = df_rules['consequents'].apply(lambda x: list(x))
+            df_rules.to_csv(f"SA_freq_Asso_age/{age_group}/SA_asso_rules.csv", index=False)
+            
+            with b:
+                z, x = st.columns(2)
+                lift_filtered = df_rules[df_rules['lift'] > lift]
     
-    if st.button("Apply Filters"):
-        # Filter data by selected age group
-        df_SA = SA[SA['Age Group'] == age_group]
-        
-        # Prepare the data for association rule mining
-        df_SA_I_cols = list(df_SA.columns[df_SA.columns.str.contains("_I")])
-        df_SA_I_cols.append('Age Group')
-        SA_input_age = df_SA[df_SA_I_cols]
-        
-        # Create a directory for the filtered data if it doesn't exist
-        if not os.path.exists('SA_Age_Split/'):
-            os.mkdir("SA_Age_Split")
+                def antecedents_only_R(antecedents_list):
+                    # Check if all elements in antecedents list end with '_R'
+                    return all(item.endswith('_R') for item in antecedents_list)
+    
+                lift_filtered = lift_filtered[lift_filtered['antecedents_list'].apply(antecedents_only_R)]
+    
+                # Split the rules into "rtor" and "rtos"
+                rtor_rows = []
+                rtos_rows = []
+    
+                def process_consequents(consequents_list):
+                    if all(item.endswith('_R') for item in consequents_list):
+                        return 'rtor'
+                    else:
+                        return 'rtos'
+    
+                # Iterate over the filtered dataframe and split into rtor and rtos
+                for index, row in lift_filtered.iterrows():
+                    rule_type = process_consequents(row['consequents_list'])
+                    if rule_type == 'rtor':
+                        rtor_rows.append(row)
+                    else:
+                        rtos_rows.append(row)
+    
+                # Create new DataFrames rtor and rtos
+                rtor_df = pd.DataFrame(rtor_rows)
+                rtos_df = pd.DataFrame(rtos_rows)
+                
+                with st.expander("R to R"):
+                    st.write(rtor_df)
+                with st.expander("R to S"):
+                    st.write(rtos_df)
+                
+                q, w = st.columns(2)
+                with q:
+                    st.subheader("Network Plot for R to R")
+                    plot1(rtor_df)
+                with w:
+                    st.subheader("Network Plot for R to S")
+                    plot2(rtos_df)
+    except:
+         with b:
+            st.subheader("Association Rules Query Panel")
+            st.write("---")
+            st.error("No Rules generated for this parameter configuration.")
+             st.warning("Try with new parameters!")
             
-        # Save filtered data for the selected age group
-        SA_input_age.to_csv(f"SA_Age_Split/SA_{age_group}.csv", index=False)
-        
-        # Process the data
-        dfi = pd.read_csv(f"SA_Age_Split/SA_{age_group}.csv", low_memory=False)
-        dfi.drop(['Age Group'], axis=1, inplace=True)
-        dfi_c = dfi[dfi.columns[dfi.isnull().sum() / dfi.shape[0] < 0.8]]
-        dfi_gd = pd.get_dummies(dfi_c, dtype='bool')
-        df_freq = apriori(dfi_gd, min_support=minsup, max_len=maxlen, use_colnames=True, low_memory=True)
-        
-        # Create a directory for frequency and association rules if it doesn't exist
-        if not os.path.exists('SA_freq_Asso_age/'):
-            os.mkdir("SA_freq_Asso_age/")
-        if os.path.exists(f"SA_freq_Asso_age/{age_group}"):
-            import shutil
-            shutil.rmtree(f"SA_freq_Asso_age/{age_group}")
-        os.mkdir(f"SA_freq_Asso_age/{age_group}")
-        
-        # Save frequency items
-        df_freq.to_csv(f"SA_freq_Asso_age/{age_group}/SA_freq_items.csv", index=False)
-        
-        # Generate and save association rules
-        df_rules = association_rules(df_freq)
-        df_rules['antecedents_list'] = df_rules['antecedents'].apply(lambda x: list(x))
-        df_rules['consequents_list'] = df_rules['consequents'].apply(lambda x: list(x))
-        df_rules.to_csv(f"SA_freq_Asso_age/{age_group}/SA_asso_rules.csv", index=False)
-        
-        with b:
-            z, x = st.columns(2)
-            lift_filtered = df_rules[df_rules['lift'] > lift]
-
-            def antecedents_only_R(antecedents_list):
-                # Check if all elements in antecedents list end with '_R'
-                return all(item.endswith('_R') for item in antecedents_list)
-
-            lift_filtered = lift_filtered[lift_filtered['antecedents_list'].apply(antecedents_only_R)]
-
-            # Split the rules into "rtor" and "rtos"
-            rtor_rows = []
-            rtos_rows = []
-
-            def process_consequents(consequents_list):
-                if all(item.endswith('_R') for item in consequents_list):
-                    return 'rtor'
-                else:
-                    return 'rtos'
-
-            # Iterate over the filtered dataframe and split into rtor and rtos
-            for index, row in lift_filtered.iterrows():
-                rule_type = process_consequents(row['consequents_list'])
-                if rule_type == 'rtor':
-                    rtor_rows.append(row)
-                else:
-                    rtos_rows.append(row)
-
-            # Create new DataFrames rtor and rtos
-            rtor_df = pd.DataFrame(rtor_rows)
-            rtos_df = pd.DataFrame(rtos_rows)
-            
-            with st.expander("R to R"):
-                st.write(rtor_df)
-            with st.expander("R to S"):
-                st.write(rtos_df)
-            
-            q, w = st.columns(2)
-            with q:
-                st.subheader("Network Plot for R to R")
-                plot1(rtor_df)
-            with w:
-                st.subheader("Network Plot for R to S")
-                plot2(rtos_df)
 
 def set_year(org, b):
     import pandas as pd
