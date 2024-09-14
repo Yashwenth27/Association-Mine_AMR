@@ -581,7 +581,7 @@ def set_whole(org, b):
             # st.subheader("Association Rules Query Panel")
             # st.write("---")
             if new_to_page==1:
-                st.warning("Try with new parameters!")
+                st.success("Choose parameters and click 'Apply Filters'")
             else:
                 st.error("No Rules generated for this parameter configuration.")
                 st.warning("Try with new parameters!")
@@ -752,7 +752,7 @@ def set_country(org, b):
             # st.subheader("Association Rules Query Panel")
             # st.write("---")
             if new_to_page==1:
-                st.warning("Try with new parameters!")
+                st.success("Choose parameters and click 'Apply Filters'")
             else:
                 st.error("No Rules generated for this parameter configuration.")
                 st.warning("Try with new parameters!")
