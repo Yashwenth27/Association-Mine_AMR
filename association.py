@@ -670,7 +670,7 @@ def set_year(org, b):
     maxlen = 3
     
     # Select Year
-    year = st.selectbox("Select Year", options=SA['Year'].unique())
+    year = st.selectbox("Select Year", options=sorted(SA['Year'].unique()))
 
     newtopage=1
 
