@@ -533,7 +533,6 @@ def set_whole(org, b):
             
             if ab!="":
                 rdf = rtos_df.copy()
-                st.caption(rdf.shape)
                 if rdf.shape[0]!=0:
                     rdfla = list(rdf["antecedents_list"])
                     rdflc = list(rdf["consequents_list"])
