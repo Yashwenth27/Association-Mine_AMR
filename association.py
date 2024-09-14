@@ -463,9 +463,9 @@ def set_whole(org, b):
                 "zhangs_metric": "Zhangs Metric"
             }, inplace=True)
             with st.expander("R to R"):
-                st.write(rtor_df.reset_index(index=False))
+                st.write(rtor_df.reset_index(drop=True))
             with st.expander("R to S"):
-                st.write(rtos_df.reset_index(index=False))
+                st.write(rtos_df.reset_index(drop=True))
     except:
         if error1==1:
             pass
