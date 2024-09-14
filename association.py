@@ -78,6 +78,7 @@ a,b = st.columns([0.3,0.7])
 mapping = {
         "Escherichia coli": ["./Final_Ecoli1.csv","./Final_Ecoli2.csv"],
         "Enterobacter spp": "./Final_EB.csv",
+        "Pseudomonas aeruginosa" : "./Final_PA.csv",
         "Enterococcus faecium": "./Final_EF.csv",
         "Klebsiella pneumoniae": "./Final_KP.csv",
         "Acinetobacter baumannii": "./Final_AB.csv",
