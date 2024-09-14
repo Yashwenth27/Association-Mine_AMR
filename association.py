@@ -468,11 +468,11 @@ def set_country(org, b):
         q, w = st.columns(2)
         with q:
             st.subheader("Network Plot for R to R")
-            st.caption(f"Total rules extracted - {rtordf.shape[0]}")
+            st.caption(f"Total rules extracted - {rtor_df.shape[0]}")
             plot1(rtor_df)
         with w:
             st.subheader("Network Plot for R to S")
-            st.caption(f"Total rules extracted - {rtosdf.shape[0]}")
+            st.caption(f"Total rules extracted - {rtos_df.shape[0]}")
             plot2(rtos_df)
 
 def set_age(org, b):
