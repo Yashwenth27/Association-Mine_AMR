@@ -77,7 +77,7 @@ a,b = st.columns([0.3,0.7])
 
 mapping = {
         "Escherichia coli": ["./Final_Ecoli1.csv","./Final_Ecoli2.csv"],
-        "Enterobacter cloacae": "./Final_EB.csv",
+        "Enterobacter spp": "./Final_EB.csv",
         "Enterococcus faecium": "./Final_EF.csv",
         "Klebsiella pneumoniae": "./Final_KP.csv",
         "Acinetobacter baumannii": "./Final_AB.csv",
@@ -304,10 +304,10 @@ def set_whole(org, b):
     print(SA.head())
     if org!="Escherichia coli":
         lift = st.slider("Choose Lift value (Default @ 2.0)", min_value=0.0, max_value=2.0, step=0.1,value=2.0)
-        minsup = st.slider("Choose Minimum Support value (Default @ 0.3)", min_value=0.0, max_value=1.0, step=0.1,value=0.3)
+        minsup = st.slider("Choose Minimum Support value (Default <= 0.3)", min_value=0.0, max_value=1.0, step=0.1,value=0.1)
     else:
         lift = st.slider("Choose Lift value (Default @ 2.0)", min_value=0.0, max_value=2.0, step=0.1,value=2.0)
-        minsup = st.slider("Choose Minimum Support value (Default @ 0.1)", min_value=0.0, max_value=1.0, step=0.1,value=0.1)
+        minsup = st.slider("Choose Minimum Support value (Default <= 0.1)", min_value=0.0, max_value=1.0, step=0.1,value=0.1)
     maxlen=3
     c=0
 
@@ -666,7 +666,7 @@ def set_year(org, b):
 
 with a:
     with st.container(border=True):
-        org = st.selectbox("Choose Organism", ["Not Chosen", "Acinetobacter baumannii", "Enterobacter cloacae",
+        org = st.selectbox("Choose Organism", ["Not Chosen", "Acinetobacter baumannii", "Enterobacter spp",
                                                "Escherichia coli", "Enterococcus faecium", "Klebsiella pneumoniae",
                                                "Pseudomonas aeruginosa", "Staphylococcus aureus"
                                                ], key=1)
