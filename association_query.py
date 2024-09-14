@@ -478,73 +478,81 @@ def set_whole(org, b):
     
             if ab!="":
                 rdf = rtor_df.copy()
-                rdfla = list(rdf["antecedents_list"])
-                rdflc = list(rdf["consequents_list"])
-                rdflan = []
-                rdflac = []
-                for i in range(len(rdfla)):
-                    if len(rdfla[i])<2:
-                        rdflan.append(rdfla[i])
-                        rdflac.append(rdflc[i])
-    
-                map_rda = []
-                for i in range(len(rdflan)):
-                    if rdflan[i][0]==(ab+"_I_R"):
-                        map_rda.append(rdflac[i])
-                
-                tos = []
-                for i in map_rda:
-                    cons = ",".join(i)
-                    tos.append(cons.replace("_I_R",""))
-                with j:
-                    st.subheader("Network Graph for R to R")
-                    if len(tos)!=0:
-                        plot_network_graph(ab,tos)
-                        with st.expander("Description"):
-                            for i in tos:
-                                st.write(f"> If Antibiotic {ab} is Resistant, then {i} are also resistant")
-                    else:
-                        st.warning("No rules found. Try with new parameters!")
+                if  rdf.shape[0]==0:
+                    rdfla = list(rdf["antecedents_list"])
+                    rdflc = list(rdf["consequents_list"])
+                    rdflan = []
+                    rdflac = []
+                    for i in range(len(rdfla)):
+                        if len(rdfla[i])<2:
+                            rdflan.append(rdfla[i])
+                            rdflac.append(rdflc[i])
+        
+                    map_rda = []
+                    for i in range(len(rdflan)):
+                        if rdflan[i][0]==(ab+"_I_R"):
+                            map_rda.append(rdflac[i])
+                    
+                    tos = []
+                    for i in map_rda:
+                        cons = ",".join(i)
+                        tos.append(cons.replace("_I_R",""))
+                    with j:
+                        st.subheader("Network Graph for R to R")
+                        if len(tos)!=0:
+                            plot_network_graph(ab,tos)
+                            with st.expander("Description"):
+                                for i in tos:
+                                    st.write(f"> If Antibiotic {ab} is Resistant, then {i} are also resistant")
+                        else:
+                            st.warning("No rules found. Try with new parameters!")
+                else:
+                    st.warning("No rules found. Try with new parameters!")
             
             if ab!="":
                 rdf = rtos_df.copy()
-                rdfla = list(rdf["antecedents_list"])
-                rdflc = list(rdf["consequents_list"])
-                rdflan = []
-                rdflac = []
-                for i in range(len(rdfla)):
-                    if len(rdfla[i])<2:
-                        rdflan.append(rdfla[i])
-                        rdflac.append(rdflc[i])
-    
-                map_rda = []
-                for i in range(len(rdflan)):
-                    if rdflan[i][0]==(ab+"_I_R"):
-                        map_rda.append(rdflac[i])
-                
-                tos = []
-                for i in map_rda:
-                    s = i
-                    ns = []
-                    for j in s:
-                        if "_I_R" in j:
-                            pass
-                        else:
-                            ns.append(j)
-                    if len(ns)>1:
-                        cons = ",".join(ns)
-                    else:
-                        cons = ns[0]
+                st.caption(rdf.shape)
+                if rdf.shape[0]==0:
+                    rdfla = list(rdf["antecedents_list"])
+                    rdflc = list(rdf["consequents_list"])
+                    rdflan = []
+                    rdflac = []
+                    for i in range(len(rdfla)):
+                        if len(rdfla[i])<2:
+                            rdflan.append(rdfla[i])
+                            rdflac.append(rdflc[i])
+        
+                    map_rda = []
+                    for i in range(len(rdflan)):
+                        if rdflan[i][0]==(ab+"_I_R"):
+                            map_rda.append(rdflac[i])
                     
-                    tos.append(cons.replace("_I_S",""))
-                with k:
-                    st.subheader("Network Graph for R to S")
-                    if len(tos)!=0:
-                        plot_network_graph(ab,tos)
-                        with st.expander("Description"):
-                            for i in tos:
-                                st.write(f"> If Antibiotic {ab} is Resistant, then {i} are Susceptible")
-                    else:
+                    tos = []
+                    for i in map_rda:
+                        s = i
+                        ns = []
+                        for j in s:
+                            if "_I_R" in j:
+                                pass
+                            else:
+                                ns.append(j)
+                        if len(ns)>1:
+                            cons = ",".join(ns)
+                        else:
+                            cons = ns[0]
+                        
+                        tos.append(cons.replace("_I_S",""))
+                    with k:
+                        st.subheader("Network Graph for R to S")
+                        if len(tos)!=0:
+                            plot_network_graph(ab,tos)
+                            with st.expander("Description"):
+                                for i in tos:
+                                    st.write(f"> If Antibiotic {ab} is Resistant, then {i} are Susceptible")
+                        else:
+                            st.warning("No rules found. Try with new parameters!")
+                else:
+                    with k:
                         st.warning("No rules found. Try with new parameters!")
     except Exception as e:
         with b:
