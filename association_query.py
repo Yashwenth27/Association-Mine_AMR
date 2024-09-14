@@ -812,7 +812,7 @@ def set_age(org, b):
             st.subheader("Association Rules Query Panel")
             st.write("---")
             st.error("No Rules generated for this parameter configuration.")
-             st.warning("Try with new parameters!")
+            st.warning("Try with new parameters!")
             
 
 def set_year(org, b):
