@@ -413,24 +413,25 @@ def set_country(org, b):
     # Load the data
     SA = getdf(org)
     print(SA.head())
-    
+
     # Get user inputs
     selected_country = st.selectbox("Select Country", options=SA['Country'].unique())
-    lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1,value=2.0)
-    minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1,value=0.1)
+    lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1, value=2.0)
+    minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1, value=0.1)
     maxlen = 3
     
-    newtopage=1
+    newtopage = 1
+    error1 = 0
 
     try:
         if st.button("Apply Filters"):
-            newtopage=0
+            newtopage = 0
             # Filter by the selected country
             df_SA = SA[SA.columns[SA.isnull().sum() / SA.shape[0] < 0.8]]
             df_filtered_country_SA = df_SA[df_SA['Country'] == selected_country]
             df_SA_I_cols = list(df_filtered_country_SA.columns[df_SA.columns.str.contains("_I")])
             df_filtered_country_SA = df_filtered_country_SA[df_SA_I_cols]
-            
+
             # Generate frequent itemsets and association rules
             df_filtered_country_SA = pd.get_dummies(df_filtered_country_SA)
             df_filtered_country_SA = df_filtered_country_SA.astype(bool)
@@ -440,7 +441,8 @@ def set_country(org, b):
             df_rules['consequents_list'] = df_rules['consequents'].apply(lambda x: list(x))
             df_rules.to_csv(f"SA_{selected_country}_rules.csv", index=False)
             csvname = f"SA_{selected_country}_rules.csv"
-            #copy to all set_*
+
+            # Display total rules generated and provide download option
             st.write(f"Total Rules Generated {df_rules.shape[0]}")
             with open(csvname, "rb") as file:
                 st.download_button(
@@ -449,27 +451,32 @@ def set_country(org, b):
                     file_name=csvname,
                     mime="text/csv"
                 )
-        
+        error1 = 1
+
+    except:
+        st.error("No rules generated")
+            
+    try:
         with b:
             z, x = st.columns(2)
             lift_filtered = df_rules[df_rules['lift'] > lift]
-            
+
+            # Filter only rules with antecedents ending with '_R'
             def antecedents_only_R(antecedents_list):
-                # Check if all elements in antecedents list end with '_R'
                 return all(item.endswith('_R') for item in antecedents_list)
-    
+
             lift_filtered = lift_filtered[lift_filtered['antecedents_list'].apply(antecedents_only_R)]
-    
-            # Split the rules into "rtor" and "rtos"
+
+            # Split the rules into "R to R" and "R to S"
             rtor_rows = []
             rtos_rows = []
-    
+
             def process_consequents(consequents_list):
                 if all(item.endswith('_R') for item in consequents_list):
                     return 'rtor'
                 else:
                     return 'rtos'
-    
+
             # Iterate over the filtered dataframe and split into rtor and rtos
             for index, row in lift_filtered.iterrows():
                 rule_type = process_consequents(row['consequents_list'])
@@ -477,30 +484,43 @@ def set_country(org, b):
                     rtor_rows.append(row)
                 else:
                     rtos_rows.append(row)
-    
-            # Create new DataFrames rtor and rtos
+
+            # Create new DataFrames for rtor and rtos
             rtor_df = pd.DataFrame(rtor_rows)
             rtos_df = pd.DataFrame(rtos_rows)
-            
+
+            # Display the DataFrames
             with st.expander("R to R"):
                 st.write(rtor_df)
             with st.expander("R to S"):
                 st.write(rtos_df)
-            
+
+            # Plot network graphs for R to R and R to S
             q, w = st.columns(2)
             with q:
                 st.subheader("Network Plot for R to R")
                 st.caption(f"Total rules extracted - {rtor_df.shape[0]}")
-                plot1(rtor_df)
+                if rtor_df.shape[0] != 0:
+                    plot1(rtor_df)
+                else:
+                    st.warning("No rules extracted. Change parameters")
             with w:
                 st.subheader("Network Plot for R to S")
                 st.caption(f"Total rules extracted - {rtos_df.shape[0]}")
-                plot2(rtos_df)
+                if rtos_df.shape[0] != 0:
+                    plot2(rtos_df)
+                else:
+                    st.warning("No rules extracted. Change parameters")
+
     except:
-        if newtopage==1:
-            st.success("Choose parameters and click 'Apply Filters'")
+        if error1 == 1:
+            pass
         else:
-            st.error("No rules generated. Try with new configuration")
+            if newtopage == 1:
+                st.success("Choose parameters and click 'Apply Filters'")
+            else:
+                st.error("No rules generated. Try with new configuration")
+
 
 def set_age(org, b):
     import pandas as pd
@@ -511,20 +531,20 @@ def set_age(org, b):
     # Load the data
     SA = getdf(org)
     print(SA.head())
-    
+
     # Define filtering sliders
-    lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1,value=2.0)
-    minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1,value=0.1)
+    lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1, value=2.0)
+    minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1, value=0.1)
     maxlen = 3
     
     age_group = st.selectbox("Select Age Group", options=SA['Age Group'].unique())
-
-
-    newtopage=1
+    
+    newtopage = 1
+    error1 = 0
 
     try:
         if st.button("Apply Filters"):
-            newtopage=0
+            newtopage = 0
             # Filter data by selected age group
             df_SA = SA[SA['Age Group'] == age_group]
             
@@ -547,7 +567,7 @@ def set_age(org, b):
             dfi_gd = pd.get_dummies(dfi_c, dtype='bool')
             df_freq = apriori(dfi_gd, min_support=minsup, max_len=maxlen, use_colnames=True, low_memory=True)
             
-            # Create a directory for frequency and association rules if it doesn't exist
+            # Create directories for frequency and association rules if not already present
             if not os.path.exists('SA_freq_Asso_age/'):
                 os.mkdir("SA_freq_Asso_age/")
             if os.path.exists(f"SA_freq_Asso_age/{age_group}"):
@@ -555,61 +575,58 @@ def set_age(org, b):
                 shutil.rmtree(f"SA_freq_Asso_age/{age_group}")
             os.mkdir(f"SA_freq_Asso_age/{age_group}")
             
-            # Save frequency items
+            # Save frequency items and association rules
             df_freq.to_csv(f"SA_freq_Asso_age/{age_group}/SA_freq_items.csv", index=False)
-            
-            # Generate and save association rules
             df_rules = association_rules(df_freq)
             df_rules['antecedents_list'] = df_rules['antecedents'].apply(lambda x: list(x))
             df_rules['consequents_list'] = df_rules['consequents'].apply(lambda x: list(x))
             df_rules.to_csv(f"SA_freq_Asso_age/{age_group}/SA_asso_rules.csv", index=False)
-            #copy to all set_*
             st.write(f"Total Rules Generated {df_rules.shape[0]}")
-            with open("SA_whole_rules.csv", "rb") as file:
+            
+            # Download button for rules
+            with open(f"SA_freq_Asso_age/{age_group}/SA_asso_rules.csv", "rb") as file:
                 st.download_button(
                     label="Download all rules",
                     data=file,
-                    file_name="Whole_rules_age.csv",
+                    file_name=f"SA_{age_group}_rules.csv",
                     mime="text/csv"
                 )
             
+            # Visualization block
             with b:
                 z, x = st.columns(2)
                 lift_filtered = df_rules[df_rules['lift'] > lift]
     
                 def antecedents_only_R(antecedents_list):
-                    # Check if all elements in antecedents list end with '_R'
                     return all(item.endswith('_R') for item in antecedents_list)
-    
+
                 lift_filtered = lift_filtered[lift_filtered['antecedents_list'].apply(antecedents_only_R)]
     
                 # Split the rules into "rtor" and "rtos"
                 rtor_rows = []
                 rtos_rows = []
-    
+
                 def process_consequents(consequents_list):
                     if all(item.endswith('_R') for item in consequents_list):
                         return 'rtor'
                     else:
                         return 'rtos'
-    
-                # Iterate over the filtered dataframe and split into rtor and rtos
+
                 for index, row in lift_filtered.iterrows():
                     rule_type = process_consequents(row['consequents_list'])
                     if rule_type == 'rtor':
                         rtor_rows.append(row)
                     else:
                         rtos_rows.append(row)
-    
-                # Create new DataFrames rtor and rtos
+
                 rtor_df = pd.DataFrame(rtor_rows)
                 rtos_df = pd.DataFrame(rtos_rows)
-                
+
                 with st.expander("R to R"):
                     st.write(rtor_df)
                 with st.expander("R to S"):
                     st.write(rtos_df)
-                
+
                 q, w = st.columns(2)
                 with q:
                     st.subheader("Network Plot for R to R")
@@ -619,11 +636,16 @@ def set_age(org, b):
                     st.subheader("Network Plot for R to S")
                     st.caption(f"Total Rules Extracted - {rtos_df.shape[0]}")
                     plot2(rtos_df)
+        error1 = 1
     except:
-        if newtopage==1:
-            st.success("Choose parameters and click 'Apply Filters'")
+        if error1 == 1:
+            pass
         else:
-            st.error("No rules generated. Try with new configuration")
+            if newtopage == 1:
+                st.success("Choose parameters and click 'Apply Filters'")
+            else:
+                st.error("No rules generated. Try with new configuration")
+
 
 def set_year(org, b):
     import pandas as pd
