@@ -85,7 +85,7 @@ def plot_network_graph(ab, tos):
         G.add_node(i)
         G.add_edge(ab, i)  # Add edges between the center and each surrounding node
 
-    # Get node positions in a circular layout for the star layout
+    # Get node positions in a spring layout for the star layout
     pos = nx.spring_layout(G, center=(0, 0))  # spring_layout places nodes in a visually appealing way
 
     # Create the figure using Plotly
@@ -136,11 +136,12 @@ def plot_network_graph(ab, tos):
                         title=f"Antibiotic: {ab}",
                         titlefont_size=16,
                         showlegend=False,
-                        visible=False,
                         hovermode='closest',
                         margin=dict(b=0, l=0, r=0, t=40),
-                        xaxis=dict(showgrid=False, zeroline=False),
-                        yaxis=dict(showgrid=False, zeroline=False))
+                        xaxis=dict(showgrid=False, zeroline=False, visible=False),  # Remove x-axis
+                        yaxis=dict(showgrid=False, zeroline=False, visible=False),  # Remove y-axis
+                        height=600  # Optional: Adjust the height of the plot
+                    )
                     )
 
     st.plotly_chart(fig)
