@@ -312,6 +312,7 @@ def set_whole(org, b):
     maxlen=3
     c=0
     newtopage=1
+    error1 = 0
     try:
         if st.button("Apply Filters"):
             newtopage=0
@@ -334,9 +335,11 @@ def set_whole(org, b):
                     file_name="SA_whole_rules.csv",
                     mime="text/csv"
                 )
-                
+        error1=1
+    except:
+        st.error("No rules generated")
             
-    
+    try:
         with b:
             z,x = st.columns(2)
             # with st.expander("All rules"):
@@ -391,6 +394,8 @@ def set_whole(org, b):
     except:
         if newtopage==1:
             st.success("Choose parameters and click 'Apply Filters'")
+        elif error1==1:
+            pass
         else:
             st.error("No rules generated. Try with new configuration")
 
