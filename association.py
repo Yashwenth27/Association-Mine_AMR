@@ -320,6 +320,15 @@ def set_whole(org, b):
         SA_rules['consequents_list'] = SA_rules['consequents'].apply(lambda x: list(x))
         SA_rules.to_csv("SA_whole_rules.csv", index=False)
         st.write(f"Total Rules Generated {count_all}")
+        with open("SA_whole_rules.csv", "rb") as file:
+            st.download_button(
+                label="Download all rules",
+                data=file,
+                file_name="SA_whole_rules.csv",
+                mime="text/csv"
+            )
+            
+        
 
     with b:
         z,x = st.columns(2)
