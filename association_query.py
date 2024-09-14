@@ -546,7 +546,7 @@ def set_whole(org, b):
                                 st.write(f"> If Antibiotic {ab} is Resistant, then {i} are Susceptible")
                     else:
                         st.warning("No rules found. Try with new parameters!")
-    except Except as e:
+    except Exception as e:
         with b:
             # st.subheader("Association Rules Query Panel")
             # st.write("---")
@@ -709,7 +709,7 @@ def set_country(org, b):
                                 st.write(f"> If Antibiotic {ab} is Resistant, then {i} are also Susceptible")
                     else:
                         st.warning("No rules found. Try with new parameters!")
-    except:
+    except Exception as e:
          with b:
             # st.subheader("Association Rules Query Panel")
             # st.write("---")
