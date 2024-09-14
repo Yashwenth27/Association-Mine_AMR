@@ -945,8 +945,9 @@ with a:
         base = st.radio("Choose Mining basis", ["Whole", "Country"])
         if org=="Not Chosen" and (base=="Country" or base=="Whole"):
             st.success("Choose an organism")
-        if base == "Whole" and org!="Not Chosen":
-            set_whole(org, b)
-        elif base == "Country":
-            set_country(org,b)
+        else:
+            if base == "Whole" and org!="Not Chosen":
+                set_whole(org, b)
+            elif base == "Country":
+                set_country(org,b)
 
