@@ -311,81 +311,88 @@ def set_whole(org, b):
         minsup = st.slider("Choose Minimum Support value (Default <= 0.1)", min_value=0.0, max_value=1.0, step=0.1,value=0.1)
     maxlen=3
     c=0
-
-    if st.button("Apply Filters"):
-        df_SA = SA[SA.columns[SA.isnull().sum() / SA.shape[0] < 0.8]]
-        df_SA_I_cols = list(df_SA.columns[df_SA.columns.str.contains("_I")])
-        SA_input = df_SA[df_SA_I_cols]
-        SA_input_getdum = pd.get_dummies(SA_input)
-        SA_input_getdum = SA_input_getdum.astype(bool)
-        SA_df_freq = apriori(SA_input_getdum, min_support=minsup, max_len=maxlen, use_colnames=True, low_memory=True)
-        SA_rules = association_rules(SA_df_freq)
-        SA_rules['antecedents_list'] = SA_rules['antecedents'].apply(lambda x: list(x))
-        SA_rules['consequents_list'] = SA_rules['consequents'].apply(lambda x: list(x))
-        SA_rules.to_csv("SA_whole_rules.csv", index=False)
-        #copy to all set_*
-        st.write(f"Total Rules Generated {SA_rules.shape[0]}")
-        with open("SA_whole_rules.csv", "rb") as file:
-            st.download_button(
-                label="Download all rules",
-                data=file,
-                file_name="SA_whole_rules.csv",
-                mime="text/csv"
-            )
+    newtopage=1
+    try:
+        if st.button("Apply Filters"):
+            newtopage=0
+            df_SA = SA[SA.columns[SA.isnull().sum() / SA.shape[0] < 0.8]]
+            df_SA_I_cols = list(df_SA.columns[df_SA.columns.str.contains("_I")])
+            SA_input = df_SA[df_SA_I_cols]
+            SA_input_getdum = pd.get_dummies(SA_input)
+            SA_input_getdum = SA_input_getdum.astype(bool)
+            SA_df_freq = apriori(SA_input_getdum, min_support=minsup, max_len=maxlen, use_colnames=True, low_memory=True)
+            SA_rules = association_rules(SA_df_freq)
+            SA_rules['antecedents_list'] = SA_rules['antecedents'].apply(lambda x: list(x))
+            SA_rules['consequents_list'] = SA_rules['consequents'].apply(lambda x: list(x))
+            SA_rules.to_csv("SA_whole_rules.csv", index=False)
+            #copy to all set_*
+            st.write(f"Total Rules Generated {SA_rules.shape[0]}")
+            with open("SA_whole_rules.csv", "rb") as file:
+                st.download_button(
+                    label="Download all rules",
+                    data=file,
+                    file_name="SA_whole_rules.csv",
+                    mime="text/csv"
+                )
+                
             
-        
-
-    with b:
-        z,x = st.columns(2)
-        # with st.expander("All rules"):
-        #     st.write(SA_rules)
-        # with st.expander("Rules with Lift > 2"):
-        #     
-        #     st.write(lift_filtered)
-        #     st.write(lift_filtered.shape)
-        lift_filtered = SA_rules[SA_rules['lift'] > lift]
-        def antecedents_only_R(antecedents_list):
-            # Check if all elements in antecedents list end with '_R'
-            return all(item.endswith('_R') for item in antecedents_list)
-
-        lift_filtered = lift_filtered[lift_filtered['antecedents_list'].apply(antecedents_only_R)]
-
-        # Step 3: Split the rules into "rtor" and "rtos"
-        rtor_rows = []
-        rtos_rows = []
-
-        def process_consequents(consequents_list):
-            if all(item.endswith('_R') for item in consequents_list):
-                return 'rtor'
-            else:
-                return 'rtos'
-
-        # Iterate over the filtered dataframe and split into rtor and rtos
-        for index, row in lift_filtered.iterrows():
-            rule_type = process_consequents(row['consequents_list'])
-            if rule_type == 'rtor':
-                rtor_rows.append(row)
-            else:
-                rtos_rows.append(row)
-
-        # Create new DataFrames rtor and rtos
-        rtor_df = pd.DataFrame(rtor_rows)
-        rtos_df = pd.DataFrame(rtos_rows)
-        with st.expander("R to R"):
-            st.write(rtor_df)
-        with st.expander("R to S"):
-            st.write(rtos_df)
-        q, w = st.columns(2)
-        with q:
-            st.subheader("Network Plot for R to R ")
-            #copy to all set_*
-            st.caption(f"Total Rules Extracted - {rtor_df.shape[0]}")
-            plot1(rtor_df)
-        with w:
-            st.subheader("Network Plot for R to S")
-            #copy to all set_*
-            st.caption(f"Total Rules Extracted - {rtos_df.shape[0]}")
-            plot2(rtos_df)
+    
+        with b:
+            z,x = st.columns(2)
+            # with st.expander("All rules"):
+            #     st.write(SA_rules)
+            # with st.expander("Rules with Lift > 2"):
+            #     
+            #     st.write(lift_filtered)
+            #     st.write(lift_filtered.shape)
+            lift_filtered = SA_rules[SA_rules['lift'] > lift]
+            def antecedents_only_R(antecedents_list):
+                # Check if all elements in antecedents list end with '_R'
+                return all(item.endswith('_R') for item in antecedents_list)
+    
+            lift_filtered = lift_filtered[lift_filtered['antecedents_list'].apply(antecedents_only_R)]
+    
+            # Step 3: Split the rules into "rtor" and "rtos"
+            rtor_rows = []
+            rtos_rows = []
+    
+            def process_consequents(consequents_list):
+                if all(item.endswith('_R') for item in consequents_list):
+                    return 'rtor'
+                else:
+                    return 'rtos'
+    
+            # Iterate over the filtered dataframe and split into rtor and rtos
+            for index, row in lift_filtered.iterrows():
+                rule_type = process_consequents(row['consequents_list'])
+                if rule_type == 'rtor':
+                    rtor_rows.append(row)
+                else:
+                    rtos_rows.append(row)
+    
+            # Create new DataFrames rtor and rtos
+            rtor_df = pd.DataFrame(rtor_rows)
+            rtos_df = pd.DataFrame(rtos_rows)
+            with st.expander("R to R"):
+                st.write(rtor_df)
+            with st.expander("R to S"):
+                st.write(rtos_df)
+            q, w = st.columns(2)
+            with q:
+                st.subheader("Network Plot for R to R ")
+                #copy to all set_*
+                st.caption(f"Total Rules Extracted - {rtor_df.shape[0]}")
+                plot1(rtor_df)
+            with w:
+                st.subheader("Network Plot for R to S")
+                #copy to all set_*
+                st.caption(f"Total Rules Extracted - {rtos_df.shape[0]}")
+                plot2(rtos_df)
+    except:
+        if newtopage==1:
+            st.success("Choose new parameters and click 'Apply Filters'")
+        else:
+            st.error("No rules generated. Try with new configuration")
 
 def set_country(org, b):
     import pandas as pd
