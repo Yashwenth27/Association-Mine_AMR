@@ -319,11 +319,11 @@ def set_whole(org, b):
         SA_input_getdum = SA_input_getdum.astype(bool)
         SA_df_freq = apriori(SA_input_getdum, min_support=minsup, max_len=maxlen, use_colnames=True, low_memory=True)
         SA_rules = association_rules(SA_df_freq)
-        count_all=SA_rules.shape[0]
         SA_rules['antecedents_list'] = SA_rules['antecedents'].apply(lambda x: list(x))
         SA_rules['consequents_list'] = SA_rules['consequents'].apply(lambda x: list(x))
         SA_rules.to_csv("SA_whole_rules.csv", index=False)
-        st.write(f"Total Rules Generated {count_all}")
+        #copy to all set_*
+        st.write(f"Total Rules Generated {SA_rules.shape[0]}")
         with open("SA_whole_rules.csv", "rb") as file:
             st.download_button(
                 label="Download all rules",
@@ -377,9 +377,13 @@ def set_whole(org, b):
         q, w = st.columns(2)
         with q:
             st.subheader("Network Plot for R to R ")
+            #copy to all set_*
+            st.caption(f"Total Rules Extracted - {rtor_df.shape[0]}")
             plot1(rtor_df)
         with w:
             st.subheader("Network Plot for R to S")
+            #copy to all set_*
+            st.caption(f"Total Rules Extracted - {rtor_df.shape[0]}")
             plot2(rtos_df)
 
 def set_country(org, b):
