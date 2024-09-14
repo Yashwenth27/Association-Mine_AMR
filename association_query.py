@@ -402,7 +402,7 @@ def plot2(rtos_df):
     st.plotly_chart(fig)
 
     
-
+new_to_page=1
 def set_whole(org, b):
     import pandas as pd
     import numpy as np
@@ -419,9 +419,10 @@ def set_whole(org, b):
     lift = st.slider("Choose Lift value (default @ 2.0)", min_value=0.0, max_value=2.0, step=0.1, value=2.0)
     minsup = st.slider("Choose Minimum Support value (default @ 0.1)", min_value=0.0, max_value=1.0, step=0.1, value=0.1)
     maxlen = 3
-
+    
     try:
         if st.button("Apply Filters"):
+            new_to_page = 0
             df_SA = SA[SA.columns[SA.isnull().sum() / SA.shape[0] < 0.8]]
             df_SA_I_cols = list(df_SA.columns[df_SA.columns.str.contains("_I")])
             SA_input = df_SA[df_SA_I_cols]
@@ -548,8 +549,11 @@ def set_whole(org, b):
         with b:
             st.subheader("Association Rules Query Panel")
             st.write("---")
-            st.error("No Rules generated for this parameter configuration.")
-            st.warning("Try with new parameters!")
+            if new_to_page==1:
+                st.warning("Try with new parameters!")
+            else:
+                st.error("No Rules generated for this parameter configuration.")
+                st.warning("Try with new parameters!")
         # with q:
         #     st.subheader("Network Plot for R to R")
         #     #plot1(map_rda)
@@ -557,7 +561,7 @@ def set_whole(org, b):
         # with w:
         #     st.subheader("Network Plot for R to S")
         #     plot2(rtos_df)
-
+new_to_page=1
 def set_country(org, b):
     import pandas as pd
     import numpy as np
@@ -579,6 +583,7 @@ def set_country(org, b):
     
     try:
         if st.button("Apply Filters"):
+            new_to_page=0
             # Filter by the selected country
             df_SA = SA[SA.columns[SA.isnull().sum() / SA.shape[0] < 0.8]]
             df_filtered_country_SA = df_SA[df_SA['Country'] == selected_country]
@@ -704,8 +709,11 @@ def set_country(org, b):
          with b:
             st.subheader("Association Rules Query Panel")
             st.write("---")
-            st.error("No Rules generated for this parameter configuration.")
-            st.warning("Try with new parameters!")
+            if new_to_page==1:
+                st.warning("Try with new parameters!")
+            else:
+                st.error("No Rules generated for this parameter configuration.")
+                st.warning("Try with new parameters!")
 
 def set_age(org, b):
     import pandas as pd
