@@ -393,7 +393,7 @@ def set_whole(org, b):
                 st.subheader("Network Plot for R to S")
                 #copy to all set_*
                 st.caption(f"Total Rules Extracted - {rtos_df.shape[0]}")
-               if rtos_df.shape[0]!=0:
+                if rtos_df.shape[0]!=0:
                     plot2(rtos_df)
                 else:
                     st.warning("No rules extracted. Change parameters")
