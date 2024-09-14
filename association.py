@@ -410,17 +410,17 @@ def set_whole(org, b):
             # Create new DataFrames rtor and rtos
             rtor_df = pd.DataFrame(rtor_rows)
             rtos_df = pd.DataFrame(rtos_rows)
-            with st.expander("R to R"):
-                st.write(rtor_df)
-            with st.expander("R to S"):
-                st.write(rtos_df)
+            
             q, w = st.columns(2)
             with q:
                 st.subheader("Network Plot for R to R ")
                 #copy to all set_*
                 st.caption(f"Total Rules Extracted - {rtor_df.shape[0]}")
                 if rtor_df.shape[0]!=0:
+                   
                     plot1(rtor_df)
+                     with st.expander("R to R"):
+                        st.write(rtor_df)
                 else:
                     st.warning("No rules extracted. Change parameters")
             with w:
@@ -428,7 +428,10 @@ def set_whole(org, b):
                 #copy to all set_*
                 st.caption(f"Total Rules Extracted - {rtos_df.shape[0]}")
                 if rtos_df.shape[0]!=0:
+                    
                     plot2(rtos_df)
+                    with st.expander("R to S"):
+                        st.write(rtos_df)
                 else:
                     st.warning("No rules extracted. Change parameters")
     except:
@@ -449,7 +452,7 @@ def set_country(org, b):
     print(SA.head())
 
     # Get user inputs
-    selected_country = st.selectbox("Select Country", options=SA['Country'].unique())
+    selected_country = st.selectbox("Select Country", options=sorted(SA['Country'].unique()))
     lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1, value=2.0)
     minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1, value=0.1)
     maxlen = 3
@@ -525,10 +528,7 @@ def set_country(org, b):
             rtos_df = pd.DataFrame(rtos_rows)
 
             # Display the DataFrames
-            with st.expander("R to R"):
-                st.write(rtor_df)
-            with st.expander("R to S"):
-                st.write(rtos_df)
+            
 
             # Plot network graphs for R to R and R to S
             q, w = st.columns(2)
@@ -537,6 +537,8 @@ def set_country(org, b):
                 st.caption(f"Total rules extracted - {rtor_df.shape[0]}")
                 if rtor_df.shape[0] != 0:
                     plot1(rtor_df)
+                    with st.expander("R to R"):
+                        st.write(rtor_df)
                 else:
                     st.warning("No rules extracted. Change parameters")
             with w:
@@ -544,6 +546,8 @@ def set_country(org, b):
                 st.caption(f"Total rules extracted - {rtos_df.shape[0]}")
                 if rtos_df.shape[0] != 0:
                     plot2(rtos_df)
+                    with st.expander("R to S"):
+                        st.write(rtos_df)
                 else:
                     st.warning("No rules extracted. Change parameters")
 
@@ -658,24 +662,25 @@ def set_age(org, b):
                 rtor_df = pd.DataFrame(rtor_rows)
                 rtos_df = pd.DataFrame(rtos_rows)
 
-                with st.expander("R to R"):
-                    st.write(rtor_df)
-                with st.expander("R to S"):
-                    st.write(rtos_df)
-
                 q, w = st.columns(2)
                 with q:
                     st.subheader("Network Plot for R to R")
                     st.caption(f"Total Rules Extracted - {rtor_df.shape[0]}")
                     if rtor_df.shape[0]!=0:
+                        
                         plot1(rtor_df)
+                        with st.expander("R to R"):
+                            st.write(rtor_df)
                     else:
                         st.warning("No rules extracted. Change Parameters.") 
                 with w:
                     st.subheader("Network Plot for R to S")
                     st.caption(f"Total Rules Extracted - {rtos_df.shape[0]}")
                     if rtos_df.shape[0]!=0:
+                        
                         plot2(rtos_df)
+                        with st.expander("R to S"):
+                            st.write(rtos_df)
                     else:
                         st.warning("No rules extracted. Change Parameters.") 
         error1 = 1
@@ -792,24 +797,28 @@ def set_year(org, b):
                 rtor_df = pd.DataFrame(rtor_rows)
                 rtos_df = pd.DataFrame(rtos_rows)
                 
-                with st.expander("R to R"):
-                    st.write(rtor_df)
-                with st.expander("R to S"):
-                    st.write(rtos_df)
+               
                 
                 q, w = st.columns(2)
                 with q:
                     st.subheader("Network Plot for R to R")
                     st.caption(f"Total rules extracted - {rtor_df.shape[0]}")
                     if rtor_df.shape[0]!=0:
+                         
+                        
                         plot1(rtor_df)
+                        with st.expander("R to R"):
+                            st.write(rtor_df)
                     else:
                         st.warning("No rules extracted. Change Parameters.") 
                 with w:
                     st.subheader("Network Plot for R to S")
                     st.caption(f"Total rules extracted - {rtos_df.shape[0]}")
                     if rtos_df.shape[0]!=0:
+                        
                         plot2(rtos_df)
+                        with st.expander("R to S"):
+                            st.write(rtos_df)
                     else:
                         st.warning("No rules extracted. Change Parameters.") 
     except:
