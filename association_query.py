@@ -580,8 +580,6 @@ def set_whole(org, b):
         with b:
             # st.subheader("Association Rules Query Panel")
             # st.write("---")
-            with st.expander("Error details"):
-                st.write(e)
             if new_to_page==1:
                 st.warning("Try with new parameters!")
             else:
@@ -753,8 +751,6 @@ def set_country(org, b):
          with b:
             # st.subheader("Association Rules Query Panel")
             # st.write("---")
-            with st.expander("Error details"):
-                st.write(e)
             if new_to_page==1:
                 st.warning("Try with new parameters!")
             else:
