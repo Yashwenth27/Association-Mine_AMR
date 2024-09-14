@@ -302,9 +302,12 @@ def set_whole(org, b):
     
     SA = getdf(org)
     print(SA.head())
-    lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1)
-    minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1)
-    maxlen = st.slider("Choose Maximum Length of Rules", min_value=1, max_value=3, step=1)
+    if org!="Escherichia coli"
+        lift = st.slider("Choose Lift value (Default @ 2.0)", min_value=0.0, max_value=2.0, step=0.1,value=2.0)
+        minsup = st.slider("Choose Minimum Support value (Default @ 0.3)", min_value=0.0, max_value=1.0, step=0.1,value=0.3)
+    else:
+        lift = st.slider("Choose Lift value (Default @ 2.0)", min_value=0.0, max_value=2.0, step=0.1,value=2.0)
+        minsup = st.slider("Choose Minimum Support value (Default @ 0.1)", min_value=0.0, max_value=1.0, step=0.1,value=0.1)
     c=0
 
     if st.button("Apply Filters"):
