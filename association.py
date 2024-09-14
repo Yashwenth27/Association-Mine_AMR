@@ -416,6 +416,16 @@ def set_country(org, b):
         df_rules['antecedents_list'] = df_rules['antecedents'].apply(lambda x: list(x))
         df_rules['consequents_list'] = df_rules['consequents'].apply(lambda x: list(x))
         df_rules.to_csv(f"SA_{selected_country}_rules.csv", index=False)
+        csvname = f"SA_{selected_country}_rules.csv"
+        #copy to all set_*
+        st.write(f"Total Rules Generated {df_rules.shape[0]}")
+        with open(csvname, "rb") as file:
+            st.download_button(
+                label="Download all rules",
+                data=file,
+                file_name=csvname,
+                mime="text/csv"
+            )
     
     with b:
         z, x = st.columns(2)
@@ -457,9 +467,11 @@ def set_country(org, b):
         q, w = st.columns(2)
         with q:
             st.subheader("Network Plot for R to R")
+            st.caption(f"Total rules extracted - {rtordf.shape[0]}")
             plot1(rtor_df)
         with w:
             st.subheader("Network Plot for R to S")
+            st.caption(f"Total rules extracted - {rtosdf.shape[0]}")
             plot2(rtos_df)
 
 def set_age(org, b):
