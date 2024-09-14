@@ -507,7 +507,8 @@ def set_whole(org, b):
                         else:
                             st.warning("No rules found. Try with new parameters!")
                 else:
-                    st.warning("No rules found. Try with new parameters!")
+                    with j:
+                        st.warning("No rules found. Try with new parameters!")
             
             if ab!="":
                 rdf = rtos_df.copy()
