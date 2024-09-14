@@ -215,40 +215,64 @@ def plot2(rtos_df):
     for index, (antec, conseq) in enumerate(zip(arows, crows)):
         for a in antec:
             for c in conseq:
-                G.add_edge(a, c)
-                edge_rule_map[(a, c)] = f"If Resistant to {a}, it is resistant to {c}"
+                if "_S" in c:  # Corrected contains check
+                    G.add_edge(a, c)
+                    edge_rule_map[(a, c)] = f"If Resistant to {a}, it is resistant to {c}"
 
     # Positioning nodes using spring layout
     pos = nx.spring_layout(G)
 
-    # Create a list for the edge trace
-    edge_trace = go.Scatter(
-        x=(),
-        y=(),
-        line=dict(width=1, color='grey'),
-        hoverinfo='text',
-        text=(),
-        mode='lines'
-    )
+    # Create lists for the edge trace
+    edge_x = []
+    edge_y = []
+    edge_text = []
 
     for edge in G.edges():
         x0, y0 = pos[edge[0]]
         x1, y1 = pos[edge[1]]
-        edge_trace['x'] += tuple([x0, x1, None])
-        edge_trace['y'] += tuple([y0, y1, None])
-        edge_trace['text'] += tuple([edge_rule_map.get(edge, '')])
+        edge_x += [x0, x1, None]
+        edge_y += [y0, y1, None]
+        edge_text.append(edge_rule_map.get(edge, ''))
+
+    # Create edge trace
+    edge_trace = go.Scatter(
+        x=edge_x,
+        y=edge_y,
+        line=dict(width=1, color='grey'),
+        hoverinfo='text',
+        text=edge_text,
+        mode='lines'
+    )
+
+    # Create lists for the node trace
+    node_x = []
+    node_y = []
+    node_text = []
+    node_color = []
+
+    # Add nodes to the plot with hover text indicating the source (antecedent or consequent)
+    for node in G.nodes():
+        x, y = pos[node]
+        node_x.append(x)
+        node_y.append(y)
+        if any(node in a for a in arows):
+            source = 'Antecedents'
+        else:
+            source = 'Consequents'
+        node_text.append(f'{node[0:len(node)-4]}')
+        node_color.append(len(list(G.neighbors(node))))  # Use number of neighbors for color
 
     # Create a node trace
     node_trace = go.Scatter(
-        x=(),
-        y=(),
-        text=[],
+        x=node_x,
+        y=node_y,
+        text=node_text,
         mode='markers+text',
         hoverinfo='text',
         marker=dict(
             showscale=True,
             colorscale='sunset',
-            color=[],
+            color=node_color,
             size=25,
             colorbar=dict(
                 thickness=15,
@@ -265,18 +289,6 @@ def plot2(rtos_df):
         ),
         textposition="bottom center"
     )
-
-    # Add nodes to the plot with hover text indicating the source (antecedent or consequent)
-    for node in G.nodes():
-        x, y = pos[node]
-        node_trace['x'] += tuple([x])
-        node_trace['y'] += tuple([y])
-        if any(node in a for a in arows):
-            source = 'Antecedents'
-        else:
-            source = 'Consequents'
-        node_trace['text'] += tuple([f'{node[0:len(node)-4]}'])
-        node_trace['marker']['color'] += tuple([len(list(G.neighbors(node)))])
 
     # Create the figure
     fig = go.Figure(data=[edge_trace, node_trace],
