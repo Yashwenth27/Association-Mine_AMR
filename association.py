@@ -181,7 +181,7 @@ def plot1(rtor_df):
         node_trace['x'] += tuple([x])
         node_trace['y'] += tuple([y])
         node_connections.append(len(list(G.neighbors(node))))  # Count connections for color scale
-        node_trace['text'] += tuple([f'{node[0:len(node)-4]}'])
+        node_trace['text'] += tuple([f'{node.replace("_I",""}'])
 
     # Set node colors based on connections
     node_trace['marker']['color'] = node_connections
@@ -269,7 +269,7 @@ def plot2(rtos_df):
             source = 'Antecedents'
         else:
             source = 'Consequents'
-        node_text.append(f'{node[0:len(node)-4]}')
+        node_text.append(f'{node.replace("_I",""}')
         node_color.append(len(list(G.neighbors(node))))  # Use number of neighbors for color
 
     # Create a node trace
