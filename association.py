@@ -427,7 +427,8 @@ def set_country(org, b):
         if st.button("Apply Filters"):
             newtopage = 0
             # Filter by the selected country
-            df_SA = SA[SA.columns[SA.isnull().sum() / SA.shape[0] < 0.8]]
+            nSA=SA[SA.Country.isin(SA.Country.value_counts()[SA.Country.value_counts()>500].index)]
+            df_SA = nSA[nSA.columns[nSA.isnull().sum() / nSA.shape[0] < 0.8]]
             df_filtered_country_SA = df_SA[df_SA['Country'] == selected_country]
             df_SA_I_cols = list(df_filtered_country_SA.columns[df_SA.columns.str.contains("_I")])
             df_filtered_country_SA = df_filtered_country_SA[df_SA_I_cols]
