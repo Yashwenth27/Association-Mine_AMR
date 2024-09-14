@@ -536,8 +536,9 @@ def set_age(org, b):
     lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1, value=2.0)
     minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1, value=0.1)
     maxlen = 3
-    
-    age_group = st.selectbox("Select Age Group", options=SA['Age Group'].unique())
+    ageopt = sorted(SA['Age Group'].unique())
+    ageopt.pop()
+    age_group = st.selectbox("Select Age Group", options=ageopt)
     
     newtopage = 1
     error1 = 0
