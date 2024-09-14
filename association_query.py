@@ -548,8 +548,8 @@ def set_whole(org, b):
                         st.warning("No rules found. Try with new parameters!")
     except:
         with b:
-            st.subheader("Association Rules Query Panel")
-            st.write("---")
+            # st.subheader("Association Rules Query Panel")
+            # st.write("---")
             if new_to_page==1:
                 st.warning("Try with new parameters!")
             else:
