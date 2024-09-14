@@ -419,8 +419,7 @@ def set_whole(org, b):
                 if rtor_df.shape[0]!=0:
                    
                     plot1(rtor_df)
-                    with st.expander("R to R"):
-                        st.write(rtor_df)
+                    
                 else:
                     st.warning("No rules extracted. Change parameters")
             with w:
@@ -430,10 +429,13 @@ def set_whole(org, b):
                 if rtos_df.shape[0]!=0:
                     
                     plot2(rtos_df)
-                    with st.expander("R to S"):
-                        st.write(rtos_df)
+                    
                 else:
                     st.warning("No rules extracted. Change parameters")
+            with st.expander("R to R"):
+                st.write(rtor_df)
+            with st.expander("R to S"):
+                st.write(rtos_df)
     except:
         if error1==1:
             pass
