@@ -419,7 +419,7 @@ def set_whole(org, b):
                 if rtor_df.shape[0]!=0:
                    
                     plot1(rtor_df)
-                     with st.expander("R to R"):
+                    with st.expander("R to R"):
                         st.write(rtor_df)
                 else:
                     st.warning("No rules extracted. Change parameters")
