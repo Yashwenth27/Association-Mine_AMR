@@ -709,16 +709,19 @@ with a:
                                                "Escherichia coli", "Enterococcus faecium", "Klebsiella pneumoniae",
                                                "Pseudomonas aeruginosa", "Staphylococcus aureus"
                                                ], key=1)
-        base = st.radio("Choose Mining basis", ["Whole", "Country", "Year", "Age"])
-        if base == "Whole" and org!="Not Chosen":
-            set_whole(org, b)
-        elif base == "Country":
-            st.write("---")
-            set_country(org,b)
-        elif base == "Age":
-            st.write("---")
-            set_age(org,b)
+        if org!="Not Chosen":
+            base = st.radio("Choose Mining basis", ["Whole", "Country", "Year", "Age"])
+            if base == "Whole" and org!="Not Chosen":
+                set_whole(org, b)
+            elif base == "Country":
+                st.write("---")
+                set_country(org,b)
+            elif base == "Age":
+                st.write("---")
+                set_age(org,b)
+            else:
+                st.write("---")
+                set_year(org,b)
         else:
-            st.write("---")
-            set_year(org,b)
+            st.success("Choose Organism")
 
