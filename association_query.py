@@ -943,6 +943,8 @@ with a:
                                                "Pseudomonas aeruginosa", "Staphylococcus aureus"
                                                ], key=1)
         base = st.radio("Choose Mining basis", ["Whole", "Country"])
+        if org=="Not Chosen":
+            st.success("Choose an organism")
         if base == "Whole" and org!="Not Chosen":
             set_whole(org, b)
         elif base == "Country":
