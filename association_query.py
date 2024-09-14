@@ -414,7 +414,7 @@ def set_whole(org, b):
         st.success("Choose Antibiotic Class")
     
     lift = st.slider("Choose Lift value (default @ 2.0)", min_value=0.0, max_value=2.0, step=0.1, value=2.0)
-    minsup = st.slider("Choose Minimum Support value (default @ 0.1)", min_value=0.0, max_value=1.0, step=0.1, value=3)
+    minsup = st.slider("Choose Minimum Support value (default @ 0.1)", min_value=0.0, max_value=1.0, step=0.1, value=0.1)
     maxlen = st.slider("Choose Maximum Length of Rules (default @ 3)", min_value=1, max_value=3, step=1,value=3)
 
 
