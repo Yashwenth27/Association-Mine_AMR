@@ -392,12 +392,13 @@ def set_whole(org, b):
                 st.caption(f"Total Rules Extracted - {rtos_df.shape[0]}")
                 plot2(rtos_df)
     except:
-        if newtopage==1:
-            st.success("Choose parameters and click 'Apply Filters'")
-        elif error1==1:
+        if error1==1:
             pass
         else:
-            st.error("No rules generated. Try with new configuration")
+            if newtopage==1:
+                st.success("Choose parameters and click 'Apply Filters'")
+            else:
+                st.error("No rules generated. Try with new configuration")
 
 def set_country(org, b):
     import pandas as pd
