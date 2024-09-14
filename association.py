@@ -410,6 +410,9 @@ def set_whole(org, b):
             # Create new DataFrames rtor and rtos
             rtor_df = pd.DataFrame(rtor_rows)
             rtos_df = pd.DataFrame(rtos_rows)
+
+            
+
             
             q, w = st.columns(2)
             with q:
@@ -432,6 +435,33 @@ def set_whole(org, b):
                     
                 else:
                     st.warning("No rules extracted. Change parameters")
+            ccc = ["antecedents_list","consequents_list","antecedent support","consequent support","support","confidence","lift","leverage","conviction","zhangs_metric"]
+            rtor_df = rtor_df[ccc]
+            rtos_df = rtos_df[ccc]
+            rtor_df.rename(columns={
+                'antecedents_list': 'Antecedents (if)',
+                'consequents_list': 'Consequents (then)',
+                'antecedent support':"Antecedent Support",
+                "consequent support": "Consequent Support",
+                "support": "Support",
+                "confidence": "Confidence",
+                "lift": "Lift",
+                "leverage": "Leverage",
+                "conviction": "Conviction",
+                "zhangs_metric": "Zhangs Metric"
+            }, inplace=True)
+            rtos_df.rename(columns={
+                'antecedents_list': 'Antecedents (if)',
+                'consequents_list': 'Consequents (then)',
+                'antecedent support':"Antecedent Support",
+                "consequent support": "Consequent Support",
+                "support": "Support",
+                "confidence": "Confidence",
+                "lift": "Lift",
+                "leverage": "Leverage",
+                "conviction": "Conviction",
+                "zhangs_metric": "Zhangs Metric"
+            }, inplace=True)
             with st.expander("R to R"):
                 st.write(rtor_df)
             with st.expander("R to S"):
