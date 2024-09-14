@@ -631,11 +631,17 @@ def set_age(org, b):
                 with q:
                     st.subheader("Network Plot for R to R")
                     st.caption(f"Total Rules Extracted - {rtor_df.shape[0]}")
-                    plot1(rtor_df)
+                    if rtor_df.shape[0]!=0:
+                        plot1(rtor_df)
+                    else:
+                        st.warning("No rules extracted. Change Parameters.") 
                 with w:
                     st.subheader("Network Plot for R to S")
                     st.caption(f"Total Rules Extracted - {rtos_df.shape[0]}")
-                    plot2(rtos_df)
+                    if rtos_df.shape[0]!=0:
+                        plot2(rtos_df)
+                    else:
+                        st.warning("No rules extracted. Change Parameters.") 
         error1 = 1
     except:
         if error1 == 1:
@@ -759,11 +765,17 @@ def set_year(org, b):
                 with q:
                     st.subheader("Network Plot for R to R")
                     st.caption(f"Total rules extracted - {rtor_df.shape[0]}")
-                    plot1(rtor_df)
+                    if rtor_df.shape[0]!=0:
+                        plot1(rtor_df)
+                    else:
+                        st.warning("No rules extracted. Change Parameters.") 
                 with w:
                     st.subheader("Network Plot for R to S")
                     st.caption(f"Total rules extracted - {rtos_df.shape[0]}")
-                    plot2(rtos_df)
+                    if rtos_df.shape[0]!=0:
+                        plot2(rtos_df)
+                    else:
+                        st.warning("No rules extracted. Change Parameters.") 
     except:
         if newtopage==1:
             st.success("Choose parameters and click 'Apply Filters'")
