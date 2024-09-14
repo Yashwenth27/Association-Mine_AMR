@@ -305,6 +305,7 @@ def set_whole(org, b):
     lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1)
     minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1)
     maxlen = st.slider("Choose Maximum Length of Rules", min_value=1, max_value=3, step=1)
+    c=0
 
     if st.button("Apply Filters"):
         df_SA = SA[SA.columns[SA.isnull().sum() / SA.shape[0] < 0.8]]
@@ -314,9 +315,11 @@ def set_whole(org, b):
         SA_input_getdum = SA_input_getdum.astype(bool)
         SA_df_freq = apriori(SA_input_getdum, min_support=minsup, max_len=maxlen, use_colnames=True, low_memory=True)
         SA_rules = association_rules(SA_df_freq)
+        count_all=SA_rules.shape[0]
         SA_rules['antecedents_list'] = SA_rules['antecedents'].apply(lambda x: list(x))
         SA_rules['consequents_list'] = SA_rules['consequents'].apply(lambda x: list(x))
         SA_rules.to_csv("SA_whole_rules.csv", index=False)
+        st.write(f"Total Rules Generated {count_all}")
 
     with b:
         z,x = st.columns(2)
@@ -360,7 +363,7 @@ def set_whole(org, b):
             st.write(rtos_df)
         q, w = st.columns(2)
         with q:
-            st.subheader("Network Plot for R to R")
+            st.subheader("Network Plot for R to R ")
             plot1(rtor_df)
         with w:
             st.subheader("Network Plot for R to S")
