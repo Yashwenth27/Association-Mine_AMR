@@ -569,8 +569,7 @@ def set_country(org, b):
                 st.caption(f"Total rules extracted - {rtor_df.shape[0]}")
                 if rtor_df.shape[0] != 0:
                     plot1(rtor_df)
-                    with st.expander("R to R"):
-                        st.write(rtor_df)
+                    
                 else:
                     st.warning("No rules extracted. Change parameters")
             with w:
@@ -578,10 +577,41 @@ def set_country(org, b):
                 st.caption(f"Total rules extracted - {rtos_df.shape[0]}")
                 if rtos_df.shape[0] != 0:
                     plot2(rtos_df)
-                    with st.expander("R to S"):
-                        st.write(rtos_df)
+                    
                 else:
                     st.warning("No rules extracted. Change parameters")
+            
+            ccc = ["antecedents_list","consequents_list","antecedent support","consequent support","support","confidence","lift","leverage","conviction","zhangs_metric"]
+            rtor_df = rtor_df[ccc]
+            rtos_df = rtos_df[ccc]
+            rtor_df.rename(columns={
+                'antecedents_list': 'Antecedents (if)',
+                'consequents_list': 'Consequents (then)',
+                'antecedent support':"Antecedent Support",
+                "consequent support": "Consequent Support",
+                "support": "Support",
+                "confidence": "Confidence",
+                "lift": "Lift",
+                "leverage": "Leverage",
+                "conviction": "Conviction",
+                "zhangs_metric": "Zhangs Metric"
+            }, inplace=True)
+            rtos_df.rename(columns={
+                'antecedents_list': 'Antecedents (if)',
+                'consequents_list': 'Consequents (then)',
+                'antecedent support':"Antecedent Support",
+                "consequent support": "Consequent Support",
+                "support": "Support",
+                "confidence": "Confidence",
+                "lift": "Lift",
+                "leverage": "Leverage",
+                "conviction": "Conviction",
+                "zhangs_metric": "Zhangs Metric"
+            }, inplace=True)
+            with st.expander("R to R"):
+                st.write(rtor_df.reset_index(drop=True))
+            with st.expander("R to S"):
+                st.write(rtos_df.reset_index(drop=True))
 
     except:
         if error1 == 1:
@@ -701,8 +731,6 @@ def set_age(org, b):
                     if rtor_df.shape[0]!=0:
                         
                         plot1(rtor_df)
-                        with st.expander("R to R"):
-                            st.write(rtor_df)
                     else:
                         st.warning("No rules extracted. Change Parameters.") 
                 with w:
@@ -711,10 +739,39 @@ def set_age(org, b):
                     if rtos_df.shape[0]!=0:
                         
                         plot2(rtos_df)
-                        with st.expander("R to S"):
-                            st.write(rtos_df)
                     else:
                         st.warning("No rules extracted. Change Parameters.") 
+                ccc = ["antecedents_list","consequents_list","antecedent support","consequent support","support","confidence","lift","leverage","conviction","zhangs_metric"]
+                rtor_df = rtor_df[ccc]
+                rtos_df = rtos_df[ccc]
+                rtor_df.rename(columns={
+                    'antecedents_list': 'Antecedents (if)',
+                    'consequents_list': 'Consequents (then)',
+                    'antecedent support':"Antecedent Support",
+                    "consequent support": "Consequent Support",
+                    "support": "Support",
+                    "confidence": "Confidence",
+                    "lift": "Lift",
+                    "leverage": "Leverage",
+                    "conviction": "Conviction",
+                    "zhangs_metric": "Zhangs Metric"
+                }, inplace=True)
+                rtos_df.rename(columns={
+                    'antecedents_list': 'Antecedents (if)',
+                    'consequents_list': 'Consequents (then)',
+                    'antecedent support':"Antecedent Support",
+                    "consequent support": "Consequent Support",
+                    "support": "Support",
+                    "confidence": "Confidence",
+                    "lift": "Lift",
+                    "leverage": "Leverage",
+                    "conviction": "Conviction",
+                    "zhangs_metric": "Zhangs Metric"
+                }, inplace=True)
+                with st.expander("R to R"):
+                    st.write(rtor_df.reset_index(drop=True))
+                with st.expander("R to S"):
+                    st.write(rtos_df.reset_index(drop=True))
         error1 = 1
     except:
         if error1 == 1:
@@ -839,8 +896,6 @@ def set_year(org, b):
                          
                         
                         plot1(rtor_df)
-                        with st.expander("R to R"):
-                            st.write(rtor_df)
                     else:
                         st.warning("No rules extracted. Change Parameters.") 
                 with w:
@@ -849,10 +904,39 @@ def set_year(org, b):
                     if rtos_df.shape[0]!=0:
                         
                         plot2(rtos_df)
-                        with st.expander("R to S"):
-                            st.write(rtos_df)
                     else:
                         st.warning("No rules extracted. Change Parameters.") 
+                ccc = ["antecedents_list","consequents_list","antecedent support","consequent support","support","confidence","lift","leverage","conviction","zhangs_metric"]
+                rtor_df = rtor_df[ccc]
+                rtos_df = rtos_df[ccc]
+                rtor_df.rename(columns={
+                    'antecedents_list': 'Antecedents (if)',
+                    'consequents_list': 'Consequents (then)',
+                    'antecedent support':"Antecedent Support",
+                    "consequent support": "Consequent Support",
+                    "support": "Support",
+                    "confidence": "Confidence",
+                    "lift": "Lift",
+                    "leverage": "Leverage",
+                    "conviction": "Conviction",
+                    "zhangs_metric": "Zhangs Metric"
+                }, inplace=True)
+                rtos_df.rename(columns={
+                    'antecedents_list': 'Antecedents (if)',
+                    'consequents_list': 'Consequents (then)',
+                    'antecedent support':"Antecedent Support",
+                    "consequent support": "Consequent Support",
+                    "support": "Support",
+                    "confidence": "Confidence",
+                    "lift": "Lift",
+                    "leverage": "Leverage",
+                    "conviction": "Conviction",
+                    "zhangs_metric": "Zhangs Metric"
+                }, inplace=True)
+                with st.expander("R to R"):
+                    st.write(rtor_df.reset_index(drop=True))
+                with st.expander("R to S"):
+                    st.write(rtos_df.reset_index(drop=True))
     except:
         if newtopage==1:
             st.success("Choose parameters and click 'Apply Filters'")
@@ -881,4 +965,40 @@ with a:
                 set_year(org,b)
         else:
             st.success("Choose Organism")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
