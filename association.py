@@ -225,7 +225,7 @@ def plot2(rtos_df):
     for index, (antec, conseq) in enumerate(zip(arows, crows)):
         for a in antec:
             for c in conseq:
-                if "_S" in c:  # Corrected contains check
+                if "_S" in c:  # Filter for consequents that contain "_S"
                     G.add_edge(a, c)
                     edge_rule_map[(a, c)] = f"If Resistant to {a}, it is resistant to {c}"
 
@@ -288,7 +288,10 @@ def plot2(rtos_df):
                 thickness=15,
                 title='Node Connections',
                 xanchor='left',
-                titleside='right'
+                titleside='right',
+                tickmode='array',
+                tickvals=[],  # Will be filled dynamically with whole numbers
+                ticktext=[]  # Corresponding text for the tick values
             ),
             line_width=4
         ),
@@ -299,6 +302,15 @@ def plot2(rtos_df):
         ),
         textposition="bottom center"
     )
+
+    # Set node colors based on connections
+    node_trace['marker']['color'] = node_color
+
+    # Calculate the tick values for the colorbar dynamically
+    max_connections = max(node_color) if node_color else 0
+    tickvals = list(range(0, max_connections + 1))  # Whole numbers from 0 to max connections
+    node_trace['marker']['colorbar']['tickvals'] = tickvals
+    node_trace['marker']['colorbar']['ticktext'] = [str(val) for val in tickvals]
 
     # Create the figure
     fig = go.Figure(data=[edge_trace, node_trace],
@@ -311,8 +323,8 @@ def plot2(rtos_df):
                         annotations=[dict(
                             showarrow=False,
                             xref="paper", yref="paper")],
-                        xaxis=dict(showgrid=False, zeroline=False,visible=False),
-                        yaxis=dict(showgrid=False, zeroline=False,visible=False))
+                        xaxis=dict(showgrid=False, zeroline=False, visible=False),
+                        yaxis=dict(showgrid=False, zeroline=False, visible=False))
                     )
 
     # Display the graph in Streamlit
