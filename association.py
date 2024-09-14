@@ -398,7 +398,7 @@ def set_country(org, b):
     selected_country = st.selectbox("Select Country", options=SA['Country'].unique())
     lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1)
     minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1)
-    maxlen = st.slider("Choose Maximum Length of Rules", min_value=1, max_value=3, step=1)
+    maxlen = 3
     
 
     if st.button("Apply Filters"):
@@ -487,7 +487,7 @@ def set_age(org, b):
     # Define filtering sliders
     lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1)
     minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1)
-    maxlen = st.slider("Choose Maximum Length of Rules", min_value=1, max_value=3, step=1)
+    maxlen = 3
     
     age_group = st.selectbox("Select Age Group", options=SA['Age Group'].unique())
     
@@ -530,6 +530,15 @@ def set_age(org, b):
         df_rules['antecedents_list'] = df_rules['antecedents'].apply(lambda x: list(x))
         df_rules['consequents_list'] = df_rules['consequents'].apply(lambda x: list(x))
         df_rules.to_csv(f"SA_freq_Asso_age/{age_group}/SA_asso_rules.csv", index=False)
+        #copy to all set_*
+        st.write(f"Total Rules Generated {df_rules.shape[0]}")
+        with open("SA_whole_rules.csv", "rb") as file:
+            st.download_button(
+                label="Download all rules",
+                data=file,
+                file_name="Whole_rules_age.csv",
+                mime="text/csv"
+            )
         
         with b:
             z, x = st.columns(2)
@@ -571,9 +580,11 @@ def set_age(org, b):
             q, w = st.columns(2)
             with q:
                 st.subheader("Network Plot for R to R")
+                st.caption(f"Total Rules Extracted - {rtor_df.shape[0]}")
                 plot1(rtor_df)
             with w:
                 st.subheader("Network Plot for R to S")
+                st.caption(f"Total Rules Extracted - {rtos_df.shape[0]}")
                 plot2(rtos_df)
 
 def set_year(org, b):
@@ -590,7 +601,7 @@ def set_year(org, b):
     # Define filtering sliders
     lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1)
     minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1)
-    maxlen = st.slider("Choose Maximum Length of Rules", min_value=1, max_value=3, step=1)
+    maxlen = 3
     
     # Select Year
     year = st.selectbox("Select Year", options=SA['Year'].unique())
@@ -633,6 +644,15 @@ def set_year(org, b):
         df_rules['antecedents_list'] = df_rules['antecedents'].apply(lambda x: list(x))
         df_rules['consequents_list'] = df_rules['consequents'].apply(lambda x: list(x))
         df_rules.to_csv(f"SA_freq_Asso_year/{year}/SA_asso_rules.csv", index=False)
+        #copy to all set_*
+        st.write(f"Total Rules Generated {SA_rules.shape[0]}")
+        with open("SA_whole_rules.csv", "rb") as file:
+            st.download_button(
+                label="Download all rules",
+                data=file,
+                file_name="Whole_rules_year.csv",
+                mime="text/csv"
+            )
         
         with b:
             z, x = st.columns(2)
@@ -674,9 +694,11 @@ def set_year(org, b):
             q, w = st.columns(2)
             with q:
                 st.subheader("Network Plot for R to R")
+                st.caption(f"Total rules extracted - {rtordf.shape[0]}")
                 plot1(rtor_df)
             with w:
                 st.subheader("Network Plot for R to S")
+                st.caption(f"Total rules extracted - {rtosdf.shape[0]}")
                 plot2(rtos_df)
 
 
