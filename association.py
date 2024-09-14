@@ -385,12 +385,18 @@ def set_whole(org, b):
                 st.subheader("Network Plot for R to R ")
                 #copy to all set_*
                 st.caption(f"Total Rules Extracted - {rtor_df.shape[0]}")
-                plot1(rtor_df)
+                if rtor_df.shape[0]!=0:
+                    plot1(rtor_df)
+                else:
+                    st.warning("No rules extracted. Change parameters")
             with w:
                 st.subheader("Network Plot for R to S")
                 #copy to all set_*
                 st.caption(f"Total Rules Extracted - {rtos_df.shape[0]}")
-                plot2(rtos_df)
+               if rtos_df.shape[0]!=0:
+                    plot2(rtos_df)
+                else:
+                    st.warning("No rules extracted. Change parameters")
     except:
         if error1==1:
             pass
