@@ -308,6 +308,7 @@ def set_whole(org, b):
     else:
         lift = st.slider("Choose Lift value (Default @ 2.0)", min_value=0.0, max_value=2.0, step=0.1,value=2.0)
         minsup = st.slider("Choose Minimum Support value (Default @ 0.1)", min_value=0.0, max_value=1.0, step=0.1,value=0.1)
+    maxlen=3
     c=0
 
     if st.button("Apply Filters"):
