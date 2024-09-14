@@ -390,7 +390,7 @@ def set_whole(org, b):
                 plot2(rtos_df)
     except:
         if newtopage==1:
-            st.success("Choose new parameters and click 'Apply Filters'")
+            st.success("Choose parameters and click 'Apply Filters'")
         else:
             st.error("No rules generated. Try with new configuration")
 
@@ -404,8 +404,8 @@ def set_country(org, b):
     
     # Get user inputs
     selected_country = st.selectbox("Select Country", options=SA['Country'].unique())
-    lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1)
-    minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1)
+    lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1,value=2.0)
+    minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1,value=0.1)
     maxlen = 3
     
     newtopage=1
@@ -486,7 +486,7 @@ def set_country(org, b):
                 plot2(rtos_df)
     except:
         if newtopage==1:
-            st.success("Choose new parameters and click 'Apply Filters'")
+            st.success("Choose parameters and click 'Apply Filters'")
         else:
             st.error("No rules generated. Try with new configuration")
 
@@ -609,7 +609,7 @@ def set_age(org, b):
                     plot2(rtos_df)
     except:
         if newtopage==1:
-            st.success("Choose new parameters and click 'Apply Filters'")
+            st.success("Choose parameters and click 'Apply Filters'")
         else:
             st.error("No rules generated. Try with new configuration")
 
@@ -625,8 +625,8 @@ def set_year(org, b):
     print(SA.head())
 
     # Define filtering sliders
-    lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1)
-    minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1)
+    lift = st.slider("Choose Lift value", min_value=0.0, max_value=2.0, step=0.1,value=2.0)
+    minsup = st.slider("Choose Minimum Support value", min_value=0.0, max_value=1.0, step=0.1,value=0.1)
     maxlen = 3
     
     # Select Year
@@ -732,7 +732,7 @@ def set_year(org, b):
                     plot2(rtos_df)
     except:
         if newtopage==1:
-            st.success("Choose new parameters and click 'Apply Filters'")
+            st.success("Choose parameters and click 'Apply Filters'")
         else:
             st.error("No rules generated. Try with new configuration")
 
