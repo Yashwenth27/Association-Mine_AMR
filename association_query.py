@@ -402,8 +402,9 @@ def plot2(rtos_df):
     st.plotly_chart(fig)
 
     
-new_to_page=1
+
 def set_whole(org, b):
+    new_to_page=1
     import pandas as pd
     import numpy as np
 
@@ -561,8 +562,9 @@ def set_whole(org, b):
         # with w:
         #     st.subheader("Network Plot for R to S")
         #     plot2(rtos_df)
-new_to_page=1
+
 def set_country(org, b):
+    new_to_page=1
     import pandas as pd
     import numpy as np
 
