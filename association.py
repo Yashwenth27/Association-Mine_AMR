@@ -100,6 +100,10 @@ def getdf(organism):
         # Usage
         original_df = combine_csv(mapping[organism][0], mapping[organism][1])
         return original_df
+    else:
+        import pandas as pd
+        df = pd.read_csv(mapping[organism])
+        return df
 
 def plot1(rtor_df):
     arows = rtor_df["antecedents_list"]
