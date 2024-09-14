@@ -498,7 +498,7 @@ def set_whole(org, b):
     
             if ab!="":
                 rdf = rtor_df.copy()
-                if  rdf.shape[0]==0:
+                if  rdf.shape[0]!=0:
                     rdfla = list(rdf["antecedents_list"])
                     rdflc = list(rdf["consequents_list"])
                     rdflan = []
@@ -534,7 +534,7 @@ def set_whole(org, b):
             if ab!="":
                 rdf = rtos_df.copy()
                 st.caption(rdf.shape)
-                if rdf.shape[0]==0:
+                if rdf.shape[0]!=0:
                     rdfla = list(rdf["antecedents_list"])
                     rdflc = list(rdf["consequents_list"])
                     rdflan = []
@@ -672,7 +672,7 @@ def set_country(org, b):
     
             if ab!="":
                 rdf = rtor_df.copy()
-                if rdf.shape[0]==0:
+                if rdf.shape[0]!=0:
                     rdfla = list(rdf["antecedents_list"])
                     rdflc = list(rdf["consequents_list"])
                     rdflan = []
@@ -707,7 +707,7 @@ def set_country(org, b):
             
             if ab!="":
                 rdf = rtos_df.copy()
-                if rdf.shape[0]==0:
+                if rdf.shape[0]!=0:
                     rdfla = list(rdf["antecedents_list"])
                     rdflc = list(rdf["consequents_list"])
                     rdflan = []
