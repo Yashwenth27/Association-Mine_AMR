@@ -194,8 +194,8 @@ def plot1(rtor_df):
                         annotations=[dict(
                             showarrow=False,
                             xref="paper", yref="paper")],
-                        xaxis=dict(showgrid=False, zeroline=False),
-                        yaxis=dict(showgrid=False, zeroline=False))
+                        xaxis=dict(showgrid=False, zeroline=False,visible=False),
+                        yaxis=dict(showgrid=False, zeroline=False,visible=False))
                     )
 
     # Display the graph in Streamlit
@@ -301,8 +301,8 @@ def plot2(rtos_df):
                         annotations=[dict(
                             showarrow=False,
                             xref="paper", yref="paper")],
-                        xaxis=dict(showgrid=False, zeroline=False),
-                        yaxis=dict(showgrid=False, zeroline=False))
+                        xaxis=dict(showgrid=False, zeroline=False,visible=False),
+                        yaxis=dict(showgrid=False, zeroline=False,visible=False))
                     )
 
     # Display the graph in Streamlit
