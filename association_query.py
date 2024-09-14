@@ -136,6 +136,7 @@ def plot_network_graph(ab, tos):
                         title=f"Antibiotic: {ab}",
                         titlefont_size=16,
                         showlegend=False,
+                        visible=False,
                         hovermode='closest',
                         margin=dict(b=0, l=0, r=0, t=40),
                         xaxis=dict(showgrid=False, zeroline=False),
