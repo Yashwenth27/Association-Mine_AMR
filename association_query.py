@@ -133,7 +133,7 @@ def plot_network_graph(ab, tos):
     # Set up the layout for the plot
     fig = go.Figure(data=[edge_trace, node_trace],
                     layout=go.Layout(
-                        title=f"Network Graph for Antibiotic: {ab}",
+                        title=f"Antibiotic: {ab}",
                         titlefont_size=16,
                         showlegend=False,
                         hovermode='closest',
@@ -492,6 +492,7 @@ def set_whole(org, b):
                 cons = ",".join(i)
                 tos.append(cons.replace("_I_R",""))
             with j:
+                st.subheader("Network Graph for R to R")
                 plot_network_graph(ab,tos)
                 with st.expander("Description"):
                     for i in tos:
@@ -529,6 +530,7 @@ def set_whole(org, b):
                 
                 tos.append(cons.replace("_I_S",""))
             with k:
+                st.subheader("Network Graph for R to S")
                 plot_network_graph(ab,tos)
                 with st.expander("Description"):
                     for i in tos:
