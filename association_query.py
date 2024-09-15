@@ -82,7 +82,7 @@ navbar_html = '''
         <a href="https://merit-mining.streamlit.app/" target="_blank">Association Mining</a>
         <a href="https://mining-query.streamlit.app/" target="_blank">Track MDR</a>
         <a href="https://merit-dataset.streamlit.app/" target="_blank">Antimicrobial Trend</a>
-        <a href="">About Us</a>
+        <a href="https://merit-aboutus.streamlit.app/">About Us</a>
     </div>
 </nav>
 
